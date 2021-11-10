@@ -91,7 +91,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.ltwsinvoicesystem.ltwsinvoicesystem/com.ltwsinvoicesystem.ltwsinvoicesystem.HelloApplication
+                                com.ltwsinvoicesystem.ltwsinvoicesystem/com.ltws.HelloApplication
                             </mainClass>
                         </configuration>
                     </execution>

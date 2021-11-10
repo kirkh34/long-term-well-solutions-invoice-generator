@@ -1,4 +1,4 @@
-package com.ltwsinvoicesystem.ltwsinvoicesystem;
+package com.ltws;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

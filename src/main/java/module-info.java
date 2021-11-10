@@ -7,7 +7,8 @@ module com.ltwsinvoicesystem.ltwsinvoicesystem {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires java.sql;
 
-    opens com.ltwsinvoicesystem.ltwsinvoicesystem to javafx.fxml;
-    exports com.ltwsinvoicesystem.ltwsinvoicesystem;
+    opens com.ltws to javafx.fxml;
+    exports com.ltws;
 }

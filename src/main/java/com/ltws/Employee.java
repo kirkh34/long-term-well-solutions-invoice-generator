@@ -5,13 +5,15 @@ public class Employee {
     public String firstName;
     public String lastName;
     public String email;
+    public String address;
 
-    public Employee(int ID, String firstName, String lastName, String email)
+    public Employee(int ID, String firstName, String lastName, String email, String address)
     {
         this.ID = ID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.address = address;
     }
     public int getID()
     {
@@ -28,5 +30,9 @@ public class Employee {
     public String getEmail()
     {
         return this.email;
+    }
+    public String getAddress()
+    {
+        return this.address;
     }
 }

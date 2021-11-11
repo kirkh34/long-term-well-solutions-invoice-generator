@@ -8,6 +8,7 @@ module com.ltwsinvoicesystem.ltwsinvoicesystem {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.sql;
+    requires mysql.connector.java;
 
     opens com.ui to javafx.fxml;
     opens com.ltws to javafx.fxml;

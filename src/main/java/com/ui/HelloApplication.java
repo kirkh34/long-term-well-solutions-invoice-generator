@@ -1,4 +1,4 @@
-package com.ltws;
+package com.ui;
 
 import com.jdbc.DBConnect;
 import javafx.application.Application;
@@ -19,7 +19,6 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        DBConnect.getConnection();
         launch();
     }
 }

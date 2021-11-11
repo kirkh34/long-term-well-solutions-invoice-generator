@@ -44,7 +44,7 @@ public class DBConnect {
 
             // our SQL SELECT query.
             // if you only need a few columns, specify them by name instead of using "*"
-            String query = "SELECT * FROM employees";
+            String query = "SELECT * FROM EMPLOYESS";
 
             // create the java statement
             st = conn.createStatement();
@@ -55,10 +55,11 @@ public class DBConnect {
             // iterate through the java resultset
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
-                String email = rs.getString("email");
+                int id = rs.getInt("EMPLOYEE_ID");
+                String firstName = rs.getString("EMPLOYEE_FNAME");
+                String lastName = rs.getString("EMPLOYEE_LNAME");
+                String email = rs.getString("EMPLOYEE_EMAIL");
+                String address = rs.getString("EMPLOYEE_ADDRESS");
                 //Date dateCreated = rs.getDate("date_created");
                 //boolean isAdmin = rs.getBoolean("is_admin");
                 //int numPoints = rs.getInt("num_points");

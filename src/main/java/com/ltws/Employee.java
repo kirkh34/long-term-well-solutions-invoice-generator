@@ -7,12 +7,13 @@ public class Employee extends Person{
     private String password;
     private boolean isAdmin;
 
-    public Employee(int ID, String firstName, String lastName, String email, String street, String city, int zip, int phone, int ssn, int dl, String username, boolean isAdmin)
+    public Employee(int ID, String firstName, String lastName, String email, String street, String city, int zip, int phone, int ssn, int dl, String username, String password, boolean isAdmin)
     {
         super(ID, firstName, lastName, email, street, city, zip, phone);
         this.ssn = ssn;
         this.dl = dl;
         this.username = username;
+        this.password = password;
         this.isAdmin = isAdmin;
     }
     public String getUsername() { return this.username; }

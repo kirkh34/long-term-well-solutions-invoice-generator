@@ -62,10 +62,7 @@ abstract class Person {
     {
         this.street = street;
     }
-    public void setCity(String city)
-    {
-        this.city = city;
-    }
+    public void setCity(String city) { this.city = city; }
     public void setZip(int zip)
     {
         this.zip = zip;

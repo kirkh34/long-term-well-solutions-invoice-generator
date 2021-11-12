@@ -89,6 +89,29 @@ public class DBConnect {
         }
     }
 
+    public static void insertEmployee(Employee emp){
+        try{
+            conn = DBConnect.getConnection();
+            // our SQL SELECT query.
+            // if you only need a few columns, specify them by name instead of using "*"
+            int admin =  emp.getIsAdmin() ? 1 : 0;
+            String query = "INSERT INTO employees (first_name, last_name, user_name, user_pass, email, street, city, zip, phone, ssn, drivers_license, isAdmin) VALUES ('"+emp.getFirstName()+"', '"+emp.getLastName()+"', '"+emp.getUsername()+"', '"+emp.getPassword()+"', '"+emp.getEmail()+"', '"+emp.getStreet()+"','"+emp.getCity()+"', '"+emp.getZip()+"', '"+emp.getPhone()+"', '"+emp.getSsn()+"', '"+emp.getDl()+"', '"+admin+"')";
+            // create the java statement
+            st = conn.createStatement();
+
+            // execute the query, and get a java resultset
+            st.executeUpdate(query);
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        finally {
+            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { st.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.close(); } catch (Exception e) { /* Ignored */ }
+        }
+    }
+
     public static ObservableList<Employee> queryEmployees() {
         ObservableList<Employee> employeeList = FXCollections.observableArrayList();
         try {
@@ -113,6 +136,7 @@ public class DBConnect {
                 String lastName = rs.getString("last_name");
                 String email = rs.getString("email");
                 String username = rs.getString("user_name");
+                String password = rs.getString("user_pass");
                 String street = rs.getString("street");
                 String city = rs.getString("city");
                 int zip = rs.getInt("zip");
@@ -122,7 +146,7 @@ public class DBConnect {
                 boolean isAdmin = rs.getBoolean("isAdmin");
                 //Date dateCreated = rs.getDate("date_created");
                 //int numPoints = rs.getInt("num_points");
-                employeeList.add(new Employee(id,firstName,lastName,email, street, city, zip, phone, ssn, dl, username, isAdmin));
+                employeeList.add(new Employee(id,firstName,lastName,email, street, city, zip, phone, ssn, dl, username, password, isAdmin));
             }
             return employeeList;
         } catch (Exception e) {

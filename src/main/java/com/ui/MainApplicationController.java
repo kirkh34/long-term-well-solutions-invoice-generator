@@ -12,14 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class HelloController implements Initializable {
-    @FXML
-    private Label welcomeText;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
+public class MainApplicationController implements Initializable {
 
     @FXML  TableView<Employee> tableView;
     @FXML  TableColumn<Employee, Integer> IDcol;
@@ -34,7 +27,6 @@ public class HelloController implements Initializable {
         lastNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("lastName"));
         emailCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("email"));
 
-        if(DBConnect.queryEmployees() == null) System.out.println("yes null");
         tableView.setItems(DBConnect.queryEmployees());
     }
 }

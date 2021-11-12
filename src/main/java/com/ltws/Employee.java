@@ -1,32 +1,45 @@
 package com.ltws;
 
-public class Employee {
-    public int ID;
-    public String firstName;
-    public String lastName;
-    public String email;
+public class Employee extends Person{
+    private int ssn;
+    private int dl;
+    private String username;
+    private String password;
+    private boolean isAdmin;
 
-    public Employee(int ID, String firstName, String lastName, String email)
+    public Employee(int ID, String firstName, String lastName, String email, String street, String city, int zip, int phone, int ssn, int dl, String username, boolean isAdmin)
     {
-        this.ID = ID;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
+        super(ID, firstName, lastName, email, street, city, zip, phone);
+        this.ssn = ssn;
+        this.dl = dl;
+        this.username = username;
+        this.isAdmin = isAdmin;
     }
-    public int getID()
+    public String getUsername() { return this.username; }
+    public String getPassword() { return this.password; }
+    public int getSsn() { return this.ssn; }
+    public int getDl() { return this.dl; }
+    public boolean getIsAdmin() { return this.isAdmin; }
+
+    public void setUsername(String username)
     {
-        return this.ID;
+        this.username = username;
     }
-    public String getFirstName()
+    public void setPassword(String password)
     {
-        return this.firstName;
+        this.password = password;
     }
-    public String getLastName()
+    public void setSsn(int ssn)
     {
-        return this.lastName;
+        this.ssn = ssn;
     }
-    public String getEmail()
+    public void setDl(int dl)
     {
-        return this.email;
+        this.dl = dl;
     }
+    public void setAdmin(boolean isAdmin)
+    {
+        this.isAdmin = isAdmin;
+    }
+
 }

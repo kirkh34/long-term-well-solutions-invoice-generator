@@ -36,6 +36,59 @@ public class DBConnect {
         return conn;
     }
 
+    public static boolean validateEmployee(String username, String password) {
+        boolean isValid = false;
+        try {
+            // get connection
+            conn = DBConnect.getConnection();
+            // our SQL SELECT query.
+            String query = "SELECT * FROM employees WHERE user_name='" + username + "' and user_pass='" + password + "'";
+            // create the java statement
+            st = conn.createStatement();
+            // execute the query, and get a java resultset
+            rs = st.executeQuery(query);
+            while(rs.next()) isValid = true;
+            System.out.println("User is "+ isValid);
+            return isValid;
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+            return false;
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception e) { /* Ignored */ }
+            try {
+                st.close();
+            } catch (Exception e) { /* Ignored */ }
+            try {
+                conn.close();
+            } catch (Exception e) { /* Ignored */ }
+        }
+    }
+    public static void updateEmployee(Employee emp){
+        try{
+            conn = DBConnect.getConnection();
+            // our SQL SELECT query.
+            // if you only need a few columns, specify them by name instead of using "*"
+            int admin =  emp.getIsAdmin() ? 1 : 0;
+            String query = "UPDATE employees SET first_name='"+emp.getFirstName()+"', last_name='"+emp.getLastName()+"', user_name='"+emp.getUsername()+"', user_pass='"+emp.getPassword()+"', email='"+emp.getEmail()+"', street='"+emp.getStreet()+"', city='"+emp.getCity()+"', zip='"+emp.getZip()+"', phone='"+emp.getPhone()+"', ssn='"+emp.getSsn()+"', drivers_license='"+emp.getDl()+"', isAdmin='"+admin+"' WHERE id='"+emp.getID()+"'";
+            // create the java statement
+            st = conn.createStatement();
+
+            // execute the query, and get a java resultset
+            st.executeUpdate(query);
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+            finally {
+            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { st.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.close(); } catch (Exception e) { /* Ignored */ }
+        }
+    }
+
     public static ObservableList<Employee> queryEmployees() {
         ObservableList<Employee> employeeList = FXCollections.observableArrayList();
         try {
@@ -59,13 +112,17 @@ public class DBConnect {
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
                 String email = rs.getString("email");
+                String username = rs.getString("user_name");
+                String street = rs.getString("street");
+                String city = rs.getString("city");
+                int zip = rs.getInt("zip");
+                int phone = rs.getInt("phone");
+                int ssn = rs.getInt("ssn");
+                int dl = rs.getInt("drivers_license");
+                boolean isAdmin = rs.getBoolean("isAdmin");
                 //Date dateCreated = rs.getDate("date_created");
-                //boolean isAdmin = rs.getBoolean("is_admin");
                 //int numPoints = rs.getInt("num_points");
-                employeeList.add(new Employee(id,firstName,lastName,email));
-                // print the results
-                System.out.println("this ran");
-                System.out.format("%s, %s, %s\n", id, firstName, lastName);
+                employeeList.add(new Employee(id,firstName,lastName,email, street, city, zip, phone, ssn, dl, username, isAdmin));
             }
             return employeeList;
         } catch (Exception e) {

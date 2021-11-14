@@ -6,24 +6,24 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ui.EmployeesPane">
+<Pane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ui.EmployeesPane">
    <children>
-      <VBox prefHeight="600.0" prefWidth="600.0">
+      <VBox>
          <children>
-            <TableView fx:id="tableView" onMouseClicked="#setOnMouseClicked" prefHeight="525.0" prefWidth="600.0">
+            <TableView fx:id="tableView" onMouseClicked="#setOnMouseClicked" prefHeight="550.0" prefWidth="600.0">
                <columns>
                   <TableColumn fx:id="IDcol" prefWidth="50.0" text="ID" />
-                  <TableColumn fx:id="firstNameCol" prefWidth="125.0" text="First Name" />
-                  <TableColumn fx:id="lastNameCol" prefWidth="125.0" text="Last Name" />
-                  <TableColumn fx:id="usernameCol" prefWidth="125.0" text="Username" />
-                  <TableColumn fx:id="emailCol" minWidth="0.0" prefWidth="125.0" text="Email" />
-                  <TableColumn fx:id="isAdminCol" prefWidth="50.0" text="Admin" />
+                  <TableColumn fx:id="firstNameCol" prefWidth="115.0" text="First Name" />
+                  <TableColumn fx:id="lastNameCol" prefWidth="115.0" text="Last Name" />
+                  <TableColumn fx:id="usernameCol" prefWidth="120.0" text="Username" />
+                  <TableColumn fx:id="emailCol" minWidth="0.0" prefWidth="150.0" text="Email" />
+                  <TableColumn fx:id="isAdminCol" prefWidth="48.0" text="Admin" />
                </columns>
             </TableView>
-            <Pane prefHeight="75.0" prefWidth="200.0">
+            <Pane prefHeight="50.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="viewEmployeeBtn" layoutX="137.0" layoutY="18.0" mnemonicParsing="false" onAction="#onViewEmployee" prefHeight="40.0" prefWidth="100.0" text="View" />
-                  <Button fx:id="addEmployeeBtn" layoutX="352.0" layoutY="18.0" mnemonicParsing="false" onAction="#onViewEmployee" prefHeight="40.0" prefWidth="100.0" text="Add" />
+                  <Button fx:id="viewEmployeeBtn" layoutX="143.0" layoutY="10.0" mnemonicParsing="false" onAction="#onViewEmployee" prefHeight="30.0" prefWidth="100.0" text="View" />
+                  <Button fx:id="addEmployeeBtn" layoutX="358.0" layoutY="10.0" mnemonicParsing="false" onAction="#onViewEmployee" prefHeight="30.0" prefWidth="100.0" text="Add" />
                </children>
             </Pane>
          </children>

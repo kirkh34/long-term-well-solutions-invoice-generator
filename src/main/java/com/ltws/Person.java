@@ -7,10 +7,11 @@ abstract class Person {
     private String email;
     private String street;
     private String city;
+    private String state;
     private int zip;
-    private int phone;
+    private long phone;
 
-    public Person(int ID, String firstName, String lastName, String email, String street, String city, int zip, int phone)
+    public Person(int ID, String firstName, String lastName, String email, String street, String city, String state, int zip, long phone)
     {
         this.ID = ID;
         this.firstName = firstName;
@@ -18,6 +19,7 @@ abstract class Person {
         this.email = email;
         this.street = street;
         this.city = city;
+        this.state = state;
         this.zip = zip;
         this.phone = phone;
     }
@@ -39,8 +41,9 @@ abstract class Person {
     }
     public String getStreet() { return this.street; }
     public String getCity() { return this.city; }
+    public String getState() { return this.state; }
     public int getZip() { return this.zip; }
-    public int getPhone() { return this.phone; }
+    public long getPhone() { return this.phone; }
 
     public void setID(int ID)
     {
@@ -63,11 +66,12 @@ abstract class Person {
         this.street = street;
     }
     public void setCity(String city) { this.city = city; }
+    public void setState(String state) { this.state = state; }
     public void setZip(int zip)
     {
         this.zip = zip;
     }
-    public void setPhone(int phone)
+    public void setPhone(long phone)
     {
         this.phone = phone;
     }

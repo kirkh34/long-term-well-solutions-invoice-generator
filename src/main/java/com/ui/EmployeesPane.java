@@ -1,7 +1,9 @@
 package com.ui;
 
-import com.jdbc.DBConnect;
+import com.jdbc.Database;
+import com.ltws.AlertBox;
 import com.ltws.Employee;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,13 +34,18 @@ public class EmployeesPane implements Initializable {
     @FXML  TableColumn<Employee, String> emailCol;
     @FXML  TableColumn<Employee, String> isAdminCol;
 
-    public static ObservableList<Employee> allEmployees = FXCollections.observableArrayList();
     public static Employee selectedEmployee;
     public static boolean addingNewEmployee;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        tableView.refresh();
         IDcol.setCellValueFactory(new PropertyValueFactory<Employee, Integer>("ID"));
+        IDcol.setCellValueFactory(cellData -> {
+            int id = cellData.getValue().getID();
+            String formattedID = String.format("%05d", id);
+            return new ReadOnlyObjectWrapper(formattedID);
+        });
         firstNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("firstName"));
         lastNameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("lastName"));
         usernameCol.setCellValueFactory(new PropertyValueFactory<Employee, String>("username"));
@@ -50,27 +57,32 @@ public class EmployeesPane implements Initializable {
                 return new ReadOnlyStringWrapper(admin);
                 });
 
-        allEmployees = DBConnect.queryEmployees();
-        tableView.setItems(allEmployees);
+        tableView.setItems(LoginPageController.allEmployees);
     }
     @FXML
     private void onViewEmployee(ActionEvent event) throws IOException {
-        String btnID = ((Button) event.getSource()).getId();
-        String stageTitle = "";
-        if(btnID.equals("viewEmployeeBtn")) {
-            addingNewEmployee = false;
-            stageTitle = "Viewing " + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName();
-        } else if (btnID.equals("addEmployeeBtn")){
-            addingNewEmployee = true;
-            stageTitle = "Add New Employee";
-        }
-        Parent viewEmployeePane = FXMLLoader.load(getClass().getResource("viewEmployeePane.fxml"));
-        Scene viewEmployeeScene = new Scene(viewEmployeePane);
-        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        app_stage.hide(); //optional
-        app_stage.setTitle(stageTitle);
-        app_stage.setScene(viewEmployeeScene);
-        app_stage.show();
+
+            String btnID = ((Button) event.getSource()).getId();
+            String stageTitle = "";
+            if (btnID.equals("viewEmployeeBtn")) {
+                if(selectedEmployee == null)
+                {
+                    AlertBox.display("Warning!","Please select an employee first");
+                    return;
+                }
+                addingNewEmployee = false;
+                stageTitle = "Viewing " + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName();
+            } else if (btnID.equals("addEmployeeBtn")) {
+                addingNewEmployee = true;
+                stageTitle = "Add New Employee";
+            }
+            Parent viewEmployeePane = FXMLLoader.load(getClass().getResource("viewEmployeePane.fxml"));
+            Scene viewEmployeeScene = new Scene(viewEmployeePane);
+            Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            app_stage.hide(); //optional
+            app_stage.setTitle(stageTitle);
+            app_stage.setScene(viewEmployeeScene);
+            app_stage.show();
     }
 
     public void setOnMouseClicked(MouseEvent mouseEvent) {

@@ -7,7 +7,7 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ui.InvoicesPane">
    <children>
-      <Label alignment="CENTER" layoutY="275.0" prefHeight="35.0" prefWidth="600.0" text="Customers Pane">
+      <Label alignment="CENTER" layoutY="275.0" prefHeight="35.0" prefWidth="600.0" text="Invoices Pane">
          <font>
             <Font size="36.0" />
          </font>

@@ -1,28 +1,29 @@
 package com.ui;
 
-import com.jdbc.DBConnect;
+import com.jdbc.Database;
 import com.ltws.Employee;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ViewEmployeePane implements Initializable {
     public Employee employee = EmployeesPane.selectedEmployee;
+    public static int lastInsertID;
+
     @FXML TextField firstNameTxt;
     @FXML TextField lastNameTxt;
     @FXML TextField emailTxt;
     @FXML TextField streetTxt;
     @FXML TextField cityTxt;
+    @FXML TextField stateTxt;
     @FXML TextField zipTxt;
     @FXML TextField phoneTxt;
     @FXML TextField empIDTxt;
@@ -45,10 +46,11 @@ public class ViewEmployeePane implements Initializable {
             streetTxt.setText(employee.getStreet());
             emailTxt.setText(employee.getEmail());
             cityTxt.setText(employee.getCity());
+            stateTxt.setText(employee.getState());
             zipTxt.setText(String.valueOf(employee.getZip()));
             phoneTxt.setText(String.valueOf(employee.getPhone()));
-            empIDTxt.setText(String.valueOf(employee.getID()));
-            driversLicenseTxt.setText(String.valueOf(employee.getDl()));
+            empIDTxt.setText(String.format("%05d", employee.getID()));
+            driversLicenseTxt.setText(String.valueOf(employee.getDln()));
             ssnTxt.setText(String.valueOf(employee.getSsn()));
             usernameTxt.setText(employee.getUsername());
             passwordTxt.setText(employee.getPassword());
@@ -63,6 +65,7 @@ public class ViewEmployeePane implements Initializable {
             adminToggle.setVisible(true);
             adminLbl.setVisible(false);
             adminToggle.setSelected(false);
+            isAdminTxt.setText("No");
         }
     }
 
@@ -72,6 +75,7 @@ public class ViewEmployeePane implements Initializable {
         streetTxt.setDisable(false);
         emailTxt.setDisable(false);
         cityTxt.setDisable(false);
+        stateTxt.setDisable(false);
         zipTxt.setDisable(false);
         phoneTxt.setDisable(false);
         empIDTxt.setDisable(false);
@@ -83,6 +87,7 @@ public class ViewEmployeePane implements Initializable {
     }
 
     public void goToEmployeesPane(ActionEvent event) throws IOException {
+        EmployeesPane.selectedEmployee = null;
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("LTWS Invoice System Dashboard");
         MainApplication.goToPage(event,"dashboard.fxml");
@@ -114,23 +119,27 @@ public class ViewEmployeePane implements Initializable {
             employee.setStreet(streetTxt.getText());
             employee.setEmail(emailTxt.getText());
             employee.setCity(cityTxt.getText());
+            employee.setState(stateTxt.getText());
             employee.setZip(Integer.parseInt(zipTxt.getText()));
-            employee.setPhone(Integer.parseInt(phoneTxt.getText()));
-            employee.setDl(Integer.parseInt(driversLicenseTxt.getText()));
+            employee.setPhone(Long.parseLong(phoneTxt.getText()));
+            employee.setDln(Long.parseLong(driversLicenseTxt.getText()));
             employee.setSsn(Integer.parseInt(ssnTxt.getText()));
             employee.setUsername(usernameTxt.getText());
             employee.setPassword(passwordTxt.getText());
             employee.setAdmin(adminToggle.isSelected());
 
-            DBConnect.updateEmployee(employee);
+            Database.updateEmployee(employee);
+            employee = null;
         } else if(EmployeesPane.addingNewEmployee) {
+
             Employee newEmployee = new Employee(
-            0,
+                0,
                 firstNameTxt.getText(),
                 lastNameTxt.getText(),
                 emailTxt.getText(),
                 streetTxt.getText(),
                 cityTxt.getText(),
+                stateTxt.getText(),
                 Integer.parseInt(zipTxt.getText()),
                 Integer.parseInt(phoneTxt.getText()),
                 Integer.parseInt(driversLicenseTxt.getText()),
@@ -139,13 +148,22 @@ public class ViewEmployeePane implements Initializable {
                 passwordTxt.getText(),
                 adminToggle.isSelected()
             );
-            //EmployeesPane.allEmployees.add(newEmployee);
-            DBConnect.insertEmployee(newEmployee);
-
+            Database.insertEmployee(newEmployee);
+            newEmployee.setID(lastInsertID);
+            LoginPageController.allEmployees.add(newEmployee);
         }
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("LTWS Invoice System Dashboard");
         MainApplication.goToPage(event,"dashboard.fxml");
 
+    }
+
+    public void deleteEmployee(ActionEvent event) throws IOException {
+        Database.deleteEmployee(employee.getID());
+        LoginPageController.allEmployees.removeIf(e -> e.equals(employee));
+        employee = null;
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("LTWS Invoice System Dashboard");
+        MainApplication.goToPage(event,"dashboard.fxml");
     }
 }

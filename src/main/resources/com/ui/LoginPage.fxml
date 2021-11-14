@@ -14,7 +14,7 @@
       <Label layoutX="183.0" layoutY="201.0" text="Password:" />
       <PasswordField fx:id="passwordTxt" layoutX="258.0" layoutY="197.0" />
       <Button fx:id="loginBtn" layoutX="276.0" layoutY="251.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Login" />
-      <Label fx:id="invalidLbl" layoutX="219.0" layoutY="308.0" textFill="RED">
+      <Label fx:id="invalidLbl" alignment="CENTER" layoutY="308.0" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="600.0" textFill="RED">
          <font>
             <Font size="16.0" />
          </font>

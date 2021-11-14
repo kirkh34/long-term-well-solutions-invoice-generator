@@ -33,6 +33,11 @@
                   <Insets bottom="10.0" right="5.0" top="10.0" />
                </padding>
             </Label>
+            <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="State:" textAlignment="CENTER">
+               <padding>
+                  <Insets bottom="10.0" right="5.0" top="10.0" />
+               </padding>
+            </Label>
             <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="Zip:" textAlignment="CENTER">
                <padding>
                   <Insets bottom="10.0" right="5.0" top="10.0" />
@@ -81,7 +86,7 @@
             <ToggleButton fx:id="adminToggle" layoutX="200.0" mnemonicParsing="false" onAction="#toggleAdmin" prefHeight="25.0" prefWidth="100.0" text="Toggle Admin" translateX="110.0" translateY="-29.0" visible="false" />
          </children>
          <padding>
-            <Insets left="25.0" right="10.0" top="50.0" />
+            <Insets left="25.0" right="10.0" top="15.0" />
          </padding>
       </VBox>
       <VBox layoutX="250.0" prefHeight="525.0" prefWidth="250.0">
@@ -102,6 +107,11 @@
                </VBox.margin>
             </TextField>
             <TextField fx:id="cityTxt" disable="true">
+               <VBox.margin>
+                  <Insets bottom="3.0" top="7.0" />
+               </VBox.margin>
+            </TextField>
+            <TextField fx:id="stateTxt" disable="true">
                <VBox.margin>
                   <Insets bottom="3.0" top="7.0" />
                </VBox.margin>
@@ -131,7 +141,10 @@
                   <Insets bottom="3.0" top="7.0" />
                </VBox.margin>
             </TextField>
-            <TextField fx:id="emailTxt" disable="true" />
+            <TextField fx:id="emailTxt" disable="true">
+               <VBox.margin>
+                  <Insets bottom="3.0" top="7.0" />
+               </VBox.margin></TextField>
             <TextField fx:id="usernameTxt" disable="true">
                <VBox.margin>
                   <Insets bottom="3.0" top="7.0" />
@@ -149,15 +162,15 @@
             </TextField>
          </children>
          <padding>
-            <Insets right="25.0" top="50.0" />
+            <Insets right="25.0" top="15.0" />
          </padding>
       </VBox>
-      <Pane layoutY="525.0" prefHeight="75.0" prefWidth="600.0">
+      <Pane layoutY="550.0" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Button fx:id="editBtn" layoutX="308.0" layoutY="20.0" mnemonicParsing="false" onAction="#editEmployee" prefHeight="35.0" prefWidth="75.0" text="Edit" />
-            <Button fx:id="cancelBtn" cancelButton="true" layoutX="218.0" layoutY="20.0" mnemonicParsing="false" onAction="#goToEmployeesPane" prefHeight="35.0" prefWidth="75.0" text="Cancel" />
-            <Button fx:id="saveBtn" layoutX="308.0" layoutY="20.0" mnemonicParsing="false" onAction="#saveEmployee" prefHeight="35.0" prefWidth="75.0" text="Save" visible="false" />
-            <Button fx:id="deleteBtn" layoutX="475.0" layoutY="20.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="75.0" text="Delete" visible="false" />
+            <Button fx:id="editBtn" layoutX="341.0" layoutY="10.0" mnemonicParsing="false" onAction="#editEmployee" prefHeight="30.0" prefWidth="75.0" text="Edit" />
+            <Button fx:id="cancelBtn" cancelButton="true" layoutX="251.0" layoutY="10.0" mnemonicParsing="false" onAction="#goToEmployeesPane" prefHeight="30.0" prefWidth="75.0" text="Cancel" />
+            <Button fx:id="saveBtn" layoutX="341.0" layoutY="10.0" mnemonicParsing="false" onAction="#saveEmployee" prefHeight="30.0" prefWidth="75.0" text="Save" visible="false" />
+            <Button fx:id="deleteBtn" layoutX="473.0" layoutY="10.0" mnemonicParsing="false" onAction="#deleteEmployee" prefHeight="30.0" prefWidth="75.0" text="Delete" visible="false" />
          </children>
       </Pane>
    </children>

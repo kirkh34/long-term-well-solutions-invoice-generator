@@ -2,16 +2,16 @@ package com.ltws;
 
 public class Employee extends Person{
     private int ssn;
-    private int dl;
+    private long dln;
     private String username;
     private String password;
     private boolean isAdmin;
 
-    public Employee(int ID, String firstName, String lastName, String email, String street, String city, int zip, int phone, int ssn, int dl, String username, String password, boolean isAdmin)
+    public Employee(int ID, String firstName, String lastName, String email, String street, String city, String state, int zip, int phone, int ssn, long dln, String username, String password, boolean isAdmin)
     {
-        super(ID, firstName, lastName, email, street, city, zip, phone);
+        super(ID, firstName, lastName, email, street, city, state, zip, phone);
         this.ssn = ssn;
-        this.dl = dl;
+        this.dln = dln;
         this.username = username;
         this.password = password;
         this.isAdmin = isAdmin;
@@ -19,7 +19,7 @@ public class Employee extends Person{
     public String getUsername() { return this.username; }
     public String getPassword() { return this.password; }
     public int getSsn() { return this.ssn; }
-    public int getDl() { return this.dl; }
+    public long getDln() { return this.dln; }
     public boolean getIsAdmin() { return this.isAdmin; }
 
     public void setUsername(String username)
@@ -34,9 +34,9 @@ public class Employee extends Person{
     {
         this.ssn = ssn;
     }
-    public void setDl(int dl)
+    public void setDln(long dln)
     {
-        this.dl = dl;
+        this.dln = dln;
     }
     public void setAdmin(boolean isAdmin)
     {

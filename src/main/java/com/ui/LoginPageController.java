@@ -1,6 +1,9 @@
 package com.ui;
 
-import com.jdbc.DBConnect;
+import com.jdbc.Database;
+import com.ltws.Employee;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +19,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LoginPageController implements Initializable {
+    public static Employee employeeLoggedIn;
+    public static ObservableList<Employee> allEmployees = FXCollections.observableArrayList();
 
     @FXML TextField usernameTxt;
     @FXML PasswordField passwordTxt;
@@ -24,11 +29,12 @@ public class LoginPageController implements Initializable {
 
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
-        Parent home_page_parent = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
-        Scene home_page_scene = new Scene(home_page_parent, 800, 600);
-        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        if (DBConnect.validateEmployee(usernameTxt.getText(),passwordTxt.getText()))
+        employeeLoggedIn = Database.validateEmployee(usernameTxt.getText(),passwordTxt.getText());
+        if (employeeLoggedIn != null)
         {
+            Parent home_page_parent = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
+            Scene home_page_scene = new Scene(home_page_parent, 800, 600);
+            Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             app_stage.hide(); //optional
             app_stage.setTitle("LTWS Invoice System Dashboard");
             app_stage.setScene(home_page_scene);
@@ -44,7 +50,9 @@ public class LoginPageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        usernameTxt.setText("kirkh34");
-        passwordTxt.setText("");
+        usernameTxt.setText("admin");
+        passwordTxt.setText("password");
+        invalidLbl.setText("Test Credentials - Username: admin | password: password");
+        allEmployees = Database.queryEmployees();
     }
 }

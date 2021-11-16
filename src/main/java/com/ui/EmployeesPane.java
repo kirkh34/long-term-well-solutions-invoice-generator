@@ -1,12 +1,8 @@
 package com.ui;
 
-import com.jdbc.Database;
-import com.ltws.AlertBox;
 import com.ltws.Employee;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -67,11 +64,12 @@ public class EmployeesPane implements Initializable {
             if (btnID.equals("viewEmployeeBtn")) {
                 if(selectedEmployee == null)
                 {
-                    AlertBox.display("Warning!","Please select an employee first");
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "You must select an employee first!");
+                    alert.showAndWait();
                     return;
                 }
                 addingNewEmployee = false;
-                stageTitle = "Viewing " + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName();
+                stageTitle = "Viewing Employee";
             } else if (btnID.equals("addEmployeeBtn")) {
                 addingNewEmployee = true;
                 stageTitle = "Add New Employee";

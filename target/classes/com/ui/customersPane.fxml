@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ui.InvoicesPane">
+<Pane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ui.EmployeesPane">
    <children>
-      <Label alignment="CENTER" layoutY="275.0" prefHeight="35.0" prefWidth="600.0" text="Customers Pane">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Label>
+      <VBox>
+         <children>
+            <TableView fx:id="tableView" onMouseClicked="#setOnMouseClicked" prefHeight="550.0" prefWidth="600.0">
+               <columns>
+                  <TableColumn fx:id="IDcol" prefWidth="50.0" text="ID" />
+                  <TableColumn fx:id="firstNameCol" prefWidth="115.0" text="First Name" />
+                  <TableColumn fx:id="lastNameCol" prefWidth="115.0" text="Last Name" />
+                  <TableColumn fx:id="usernameCol" prefWidth="120.0" text="Username" />
+                  <TableColumn fx:id="emailCol" minWidth="0.0" prefWidth="150.0" text="Email" />
+                  <TableColumn fx:id="isAdminCol" prefWidth="48.0" text="Admin" />
+               </columns>
+            </TableView>
+            <Pane prefHeight="50.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="viewEmployeeBtn" layoutX="143.0" layoutY="10.0" mnemonicParsing="false" onAction="#onViewEmployee" prefHeight="30.0" prefWidth="100.0" text="View" />
+                  <Button fx:id="addEmployeeBtn" layoutX="358.0" layoutY="10.0" mnemonicParsing="false" onAction="#onViewEmployee" prefHeight="30.0" prefWidth="100.0" text="Add" />
+               </children>
+            </Pane>
+         </children>
+      </VBox>
    </children>
-</AnchorPane>
+</Pane>

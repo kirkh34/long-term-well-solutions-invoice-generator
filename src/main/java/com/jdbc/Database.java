@@ -44,7 +44,7 @@ public class Database {
             // Get Connection
             conn = getConnection();
             // Our SQL SELECT query.
-            String query = "SELECT * FROM EMPLOYEE WHERE EMPLOYEE_USERNAME=? and EMPLOYEE_PASSWORD=?";
+            String query = "SELECT EMPLOYEE.EMPLOYEE_ID, EMPLOYEE.EMPLOYEE_FNAME, EMPLOYEE.EMPLOYEE_LNAME, EMPLOYEE.EMPLOYEE_EMAIL, EMPLOYEE.EMPLOYEE_PHONE, EMPLOYEE_INFO.EMPLOYEE_SSN, EMPLOYEE_INFO.EMPLOYEE_USERNAME, EMPLOYEE_INFO.EMPLOYEE_PASSWORD, EMPLOYEE_INFO.EMPLOYEE_DLN, EMPLOYEE_INFO.EMPLOYEE_STREET, EMPLOYEE_INFO.EMPLOYEE_CITY, EMPLOYEE_INFO.EMPLOYEE_STATE, EMPLOYEE_INFO.EMPLOYEE_ZIP, EMPLOYEE_INFO.EMPLOYEE_ADMIN FROM EMPLOYEE INNER JOIN EMPLOYEE_INFO ON EMPLOYEE.EMPLOYEE_ID=EMPLOYEE_INFO.EMPLOYEE_ID WHERE EMPLOYEE_INFO.EMPLOYEE_USERNAME=? AND EMPLOYEE_INFO.EMPLOYEE_PASSWORD=?";
             // Create prepared statement with query
             ps = conn.prepareCall(query);
             // Set values in query
@@ -86,15 +86,22 @@ public class Database {
             // our SQL SELECT query.
             // if you only need a few columns, specify them by name instead of using "*"
             int admin =  emp.getIsAdmin() ? 1 : 0;
-            String query = "UPDATE EMPLOYEE SET EMPLOYEE_FNAME=?, EMPLOYEE_LNAME=?, EMPLOYEE_USERNAME=?, EMPLOYEE_PASSWORD=?, EMPLOYEE_EMAIL=?, EMPLOYEE_STREET=?, EMPLOYEE_CITY=?, EMPLOYEE_STATE=?, EMPLOYEE_ZIP=?, EMPLOYEE_PHONE=?, EMPLOYEE_SSN=?, EMPLOYEE_DLN=?, EMPLOYEE_ADMIN=? WHERE EMPLOYEE_ID=?";
+            String query = "UPDATE EMPLOYEE SET EMPLOYEE_FNAME=?, EMPLOYEE_LNAME=?, EMPLOYEE_EMAIL=?, EMPLOYEE_PHONE=? WHERE EMPLOYEE_ID=?";
             // Create prepared statement with query
             ps = conn.prepareCall(query);
             // Set values in query
-            setEmployeeValues(emp, ps, admin);
-            ps.setInt(14, emp.getID());
+            setEmployeeValues(emp, ps);
+            ps.setInt(5, emp.getID());
             // Execute UPDATE query
             ps.executeUpdate();
             System.out.println("DB - Update Employee");
+            ps.close();
+            String query2 = "UPDATE EMPLOYEE_INFO SET EMPLOYEE_SSN=?, EMPLOYEE_USERNAME=?, EMPLOYEE_PASSWORD=?, EMPLOYEE_DLN=?, EMPLOYEE_STREET=?, EMPLOYEE_CITY=?, EMPLOYEE_STATE=?, EMPLOYEE_ZIP=?, EMPLOYEE_ADMIN=? WHERE EMPLOYEE_ID=?";
+            ps = conn.prepareCall(query2);
+            setEmployeeInfoValues(emp, ps, admin, emp.getID());
+            ps.executeUpdate();
+            System.out.println("DB - Update Employee Info");
+
         } catch (Exception e) {
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());
@@ -111,19 +118,28 @@ public class Database {
         try{
             conn = Database.getConnection();
             int admin =  emp.getIsAdmin() ? 1 : 0;
-            String query = "INSERT INTO EMPLOYEE (EMPLOYEE_FNAME, EMPLOYEE_LNAME, EMPLOYEE_USERNAME, EMPLOYEE_PASSWORD, EMPLOYEE_EMAIL, EMPLOYEE_STREET, EMPLOYEE_CITY, EMPLOYEE_STATE, EMPLOYEE_ZIP, EMPLOYEE_PHONE, EMPLOYEE_SSN, EMPLOYEE_DLN, EMPLOYEE_ADMIN) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            int newID = 0;
+            String query = "INSERT INTO EMPLOYEE (EMPLOYEE_FNAME, EMPLOYEE_LNAME, EMPLOYEE_EMAIL, EMPLOYEE_PHONE) VALUES (?,?,?,?)";
             ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             //ps = conn.prepareCall(query);
             //Set values
-            setEmployeeValues(emp, ps, admin);
+            setEmployeeValues(emp, ps);
             // execute the query
             ps.executeUpdate();
+            System.out.println("DB - Insert Employee");
             rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 ViewEmployeePane.lastInsertID = rs.getInt(1);
+                newID = rs.getInt(1);
             }
-            System.out.println("DB - Insert Employee");
+            ps.close();
+            String query2 = "INSERT INTO EMPLOYEE_INFO (EMPLOYEE_SSN, EMPLOYEE_USERNAME, EMPLOYEE_PASSWORD, EMPLOYEE_DLN, EMPLOYEE_STREET, EMPLOYEE_CITY, EMPLOYEE_STATE, EMPLOYEE_ZIP, EMPLOYEE_ADMIN, EMPLOYEE_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            ps = conn.prepareCall(query2);
+            setEmployeeInfoValues(emp, ps, admin, newID);
+            ps.executeUpdate();
+
+            System.out.println("DB - Insert Employee Info");
         } catch (Exception e) {
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());
@@ -141,7 +157,7 @@ public class Database {
             // get connection
             conn = getConnection();
             // our SQL SELECT query.
-            String query = "SELECT * FROM EMPLOYEE";
+            String query = "SELECT EMPLOYEE.EMPLOYEE_ID, EMPLOYEE.EMPLOYEE_FNAME, EMPLOYEE.EMPLOYEE_LNAME, EMPLOYEE.EMPLOYEE_EMAIL, EMPLOYEE.EMPLOYEE_PHONE, EMPLOYEE_INFO.EMPLOYEE_SSN, EMPLOYEE_INFO.EMPLOYEE_USERNAME, EMPLOYEE_INFO.EMPLOYEE_PASSWORD, EMPLOYEE_INFO.EMPLOYEE_DLN, EMPLOYEE_INFO.EMPLOYEE_STREET, EMPLOYEE_INFO.EMPLOYEE_CITY, EMPLOYEE_INFO.EMPLOYEE_STATE, EMPLOYEE_INFO.EMPLOYEE_ZIP, EMPLOYEE_INFO.EMPLOYEE_ADMIN FROM EMPLOYEE INNER JOIN EMPLOYEE_INFO ON EMPLOYEE.EMPLOYEE_ID=EMPLOYEE_INFO.EMPLOYEE_ID ORDER BY EMPLOYEE.EMPLOYEE_ID ASC";
             ps = conn.prepareCall(query);
             rs = ps.executeQuery();
             // iterate through the java ResultSet
@@ -151,7 +167,7 @@ public class Database {
             System.out.println("DB - Query Employees");
             return employeeList;
         } catch (Exception e) {
-            System.err.println("Got an exception! ");
+            System.err.println("Got an exception!");
             System.err.println(e.getMessage());
             return null;
         }
@@ -185,21 +201,27 @@ public class Database {
         }
     }
 
+
     // Set values of prepared statement of whole table (except for id)
-    private static void setEmployeeValues(Employee emp, PreparedStatement ps, int admin) throws SQLException {
+    private static void setEmployeeValues(Employee emp, PreparedStatement ps) throws SQLException {
         ps.setString(1, emp.getFirstName().trim());
         ps.setString(2, emp.getLastName().trim());
-        ps.setString(3, emp.getUsername().trim());
-        ps.setString(4, emp.getPassword().trim());
-        ps.setString(5, emp.getEmail().trim());
-        ps.setString(6, emp.getStreet().trim());
-        ps.setString(7, emp.getCity().trim());
-        ps.setString(8, emp.getState().trim());
-        ps.setInt(9, emp.getZip());
-        ps.setLong(10, emp.getPhone());
-        ps.setInt(11, emp.getSsn());
-        ps.setLong(12, emp.getDln());
-        ps.setInt(13, admin);
+        ps.setString(3, emp.getEmail().trim());
+        ps.setLong(4, emp.getPhone());
+    }
+
+    // Set values of prepared statement of whole table (except for id)
+    private static void setEmployeeInfoValues(Employee emp, PreparedStatement ps, int admin, int id) throws SQLException {
+        ps.setInt(1, emp.getSsn());
+        ps.setString(2, emp.getUsername().trim());
+        ps.setString(3, emp.getPassword().trim());
+        ps.setLong(4, emp.getDln());
+        ps.setString(5, emp.getStreet().trim());
+        ps.setString(6, emp.getCity().trim());
+        ps.setString(7, emp.getState().trim());
+        ps.setInt(8, emp.getZip());
+        ps.setInt(9, admin);
+        ps.setInt(10, id);
     }
 
     // Create a populated employee object from SELECT employee statement
@@ -214,9 +236,9 @@ public class Database {
         String city = rs.getString("EMPLOYEE_CITY");
         String state = rs.getString("EMPLOYEE_STATE");
         int zip = rs.getInt("EMPLOYEE_ZIP");
-        int phone = rs.getInt("EMPLOYEE_PHONE");
+        long phone = rs.getLong("EMPLOYEE_PHONE");
         int ssn = rs.getInt("EMPLOYEE_SSN");
-        int dl = rs.getInt("EMPLOYEE_DLN");
+        long dl = rs.getLong("EMPLOYEE_DLN");
         boolean isAdmin = rs.getBoolean("EMPLOYEE_ADMIN");
 
         return new Employee(id,firstName,lastName,email, street, city, state, zip, phone, ssn, dl, username, password, isAdmin);

@@ -43,7 +43,7 @@ public class ViewEmployeePane implements Initializable {
     @FXML RowConstraints empIDRow;
     @FXML RowConstraints phoneRow;
 
-    ObservableList<String> stateComboOptions = FXCollections.observableArrayList("AK", "AL", "AR", "AS", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "GU", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VI", "VT", "WA", "WI", "WV", "WY");
+    public static ObservableList<String> stateComboOptions = FXCollections.observableArrayList("AK", "AL", "AR", "AS", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "GU", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VI", "VT", "WA", "WI", "WV", "WY");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -101,9 +101,8 @@ public class ViewEmployeePane implements Initializable {
 
     public void goToEmployeesPane(ActionEvent event) throws IOException {
         EmployeesPane.selectedEmployee = null;
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.setTitle("LTWS Invoice System Dashboard");
-        Main.goToPage(event,"dashboard.fxml");
+        LoginPageController.showPane = "EmployeesPane";
+        Main.goToPage(event,"dashboard.fxml", "LTWS Invoice System Dashboard");
     }
 
     public void editEmployee(ActionEvent event){
@@ -145,9 +144,7 @@ public class ViewEmployeePane implements Initializable {
             if(validateFields()) {
                 Database.updateEmployee(employee);
                 employee = null;
-                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                stage.setTitle("LTWS Invoice System Dashboard");
-                Main.goToPage(event,"dashboard.fxml");
+                Main.goToPage(event,"dashboard.fxml", "LTWS Invoice System Dashboard");
             }
         } else if(EmployeesPane.addingNewEmployee) {
 
@@ -171,10 +168,7 @@ public class ViewEmployeePane implements Initializable {
                 Database.insertEmployee(newEmployee);
                 newEmployee.setID(lastInsertID);
                 LoginPageController.allEmployees.add(newEmployee);
-
-                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                stage.setTitle("LTWS Invoice System Dashboard");
-                Main.goToPage(event,"dashboard.fxml");
+                Main.goToPage(event,"dashboard.fxml", "LTWS Invoice System Dashboard");
             }
         }
     }
@@ -183,9 +177,7 @@ public class ViewEmployeePane implements Initializable {
         Database.deleteEmployee(employee.getID());
         LoginPageController.allEmployees.removeIf(e -> e.equals(employee));
         employee = null;
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.setTitle("LTWS Invoice System Dashboard");
-        Main.goToPage(event,"dashboard.fxml");
+        Main.goToPage(event,"dashboard.fxml", "LTWS Invoice System Dashboard");
     }
 
     public void hideEmpIDRow()

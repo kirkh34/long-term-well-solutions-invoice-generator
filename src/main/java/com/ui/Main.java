@@ -24,11 +24,12 @@ public class Main extends Application {
     }
 
     @FXML
-    public static void goToPage(ActionEvent event, String fxmlPage) throws IOException {
+    public static void goToPage(ActionEvent event, String fxmlPage, String title) throws IOException {
         Parent parent = FXMLLoader.load(Main.class.getResource(fxmlPage));
         Scene scene = new Scene(parent);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.hide(); //optional
+        stage.setTitle(title);
         stage.setScene(scene);
         stage.show();
     }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane prefHeight="248.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ui.ViewPayment">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="312.0" minWidth="173.0" prefWidth="173.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="375.0" minWidth="49.0" prefWidth="49.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="444.0" minWidth="195.0" prefWidth="228.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="-Infinity" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+        <RowConstraints vgrow="SOMETIMES" />
+        <RowConstraints vgrow="SOMETIMES" />
+        <RowConstraints vgrow="SOMETIMES" />
+        <RowConstraints vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="74.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Label fx:id="viewPaymentLbl" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="364.0" GridPane.columnSpan="3">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+        <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Card Number:" textAlignment="CENTER" GridPane.rowIndex="1">
+            <padding>
+                <Insets right="10.0" />
+            </padding>
+        </Label>
+        <TextField fx:id="ccNumberTxt" disable="true" maxHeight="1.7976931348623157E308" maxWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets bottom="4.0" top="4.0" />
+            </GridPane.margin>
+        </TextField>
+        <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Card Expiration:" textAlignment="CENTER" GridPane.rowIndex="2">
+            <padding>
+                <Insets right="10.0" />
+            </padding>
+        </Label>
+        <TextField fx:id="ccExpMonthTxt" disable="true" maxHeight="1.7976931348623157E308" maxWidth="50.0" promptText="MM" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <GridPane.margin>
+                <Insets bottom="4.0" top="4.0" />
+            </GridPane.margin>
+        </TextField>
+        <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Security Code:" textAlignment="CENTER" GridPane.rowIndex="3">
+            <padding>
+                <Insets right="10.0" />
+            </padding>
+        </Label>
+        <TextField fx:id="ccCVCTxt" disable="true" maxHeight="1.7976931348623157E308" maxWidth="50.0" promptText="CVC" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+            <GridPane.margin>
+                <Insets bottom="4.0" top="4.0" />
+            </GridPane.margin>
+        </TextField>
+      <TextField fx:id="ccExpYearTxt" disable="true" maxHeight="1.7976931348623157E308" maxWidth="50.0" promptText="YY" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="5.0" top="4.0" />
+         </GridPane.margin>
+      </TextField>
+        <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Zip:" textAlignment="CENTER" GridPane.rowIndex="4">
+            <padding>
+                <Insets right="10.0" />
+            </padding>
+        </Label>
+        <TextField fx:id="ccZipTxt" disable="true" maxHeight="1.7976931348623157E308" maxWidth="105.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+            <GridPane.margin>
+                <Insets bottom="4.0" top="4.0" />
+            </GridPane.margin>
+        </TextField>
+        <AnchorPane prefHeight="200.0" GridPane.columnSpan="3" GridPane.rowIndex="5">
+            <children>
+                <Button fx:id="editPaymentBtn" layoutX="135.0" layoutY="22.0" mnemonicParsing="false" onAction="#editPayment" prefHeight="30.0" prefWidth="75.0" text="Edit" AnchorPane.leftAnchor="135.0" AnchorPane.topAnchor="22.0" />
+                <Button fx:id="cancelBtn" cancelButton="true" layoutX="221.0" layoutY="22.0" mnemonicParsing="false" onAction="#cancelBtnAction" prefHeight="30.0" prefWidth="75.0" text="Cancel" AnchorPane.leftAnchor="221.0" AnchorPane.topAnchor="22.0" />
+                <Button fx:id="savePaymentBtn" layoutX="135.0" layoutY="22.0" mnemonicParsing="false" onAction="#savePayment" prefHeight="30.0" prefWidth="75.0" text="Save" visible="false" AnchorPane.leftAnchor="135.0" AnchorPane.topAnchor="22.0" />
+                <Button fx:id="deletePaymentBtn" layoutX="335.0" layoutY="22.0" mnemonicParsing="false" onAction="#deletePayment" prefHeight="30.0" prefWidth="75.0" text="Delete" visible="false" AnchorPane.leftAnchor="335.0" AnchorPane.topAnchor="22.0" />
+            </children>
+        </AnchorPane>
+      <Button fx:id="showCCBtn" mnemonicParsing="false" onAction="#showCC" prefHeight="30.0" prefWidth="75.0" text="Show CC" GridPane.columnIndex="2" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="110.0" />
+         </GridPane.margin>
+      </Button>
+    </children>
+</GridPane>

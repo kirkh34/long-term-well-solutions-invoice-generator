@@ -87,7 +87,7 @@ public class EmployeesPane implements Initializable {
         if(mouseEvent.getClickCount() > 0){
             if (tableView.getSelectionModel().getSelectedItem() != null) {
                 selectedEmployee = tableView.getSelectionModel().getSelectedItem();
-                System.out.println(selectedEmployee.getEmail());
+                //System.out.println(selectedEmployee.getEmail());
                 //nameTextField.setText(selectedPerson.getName());
                 //addressTextField.setText(selectedPerson.getAddress());
             }

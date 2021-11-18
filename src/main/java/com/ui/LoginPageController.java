@@ -1,6 +1,7 @@
 package com.ui;
 
 import com.jdbc.Database;
+import com.ltws.Customer;
 import com.ltws.Employee;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,8 +20,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LoginPageController implements Initializable {
+    public static String showPane = "";
     public static Employee employeeLoggedIn;
     public static ObservableList<Employee> allEmployees = FXCollections.observableArrayList();
+    public static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
 
     @FXML TextField usernameTxt;
     @FXML PasswordField passwordTxt;
@@ -32,13 +35,13 @@ public class LoginPageController implements Initializable {
         employeeLoggedIn = Database.validateEmployee(usernameTxt.getText(),passwordTxt.getText());
         if (employeeLoggedIn != null)
         {
-            Parent home_page_parent = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
-            Scene home_page_scene = new Scene(home_page_parent, 800, 600);
-            Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            app_stage.hide(); //optional
-            app_stage.setTitle("LTWS Invoice System Dashboard");
-            app_stage.setScene(home_page_scene);
-            app_stage.show();
+            Parent parent = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
+            Scene scene = new Scene(parent, 800, 600);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.hide(); //optional
+            stage.setTitle("LTWS Invoice System Dashboard");
+            stage.setScene(scene);
+            stage.show();
         }
         else
         {
@@ -54,5 +57,7 @@ public class LoginPageController implements Initializable {
         passwordTxt.setText("password");
         invalidLbl.setText("Test Credentials - Username: admin | password: password");
         allEmployees = Database.queryEmployees();
+        allCustomers = Database.queryCustomers();
+        showPane = "CustomersPane";
     }
 }

@@ -48,9 +48,13 @@ public class Dashboard implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //System.out.println(userLoggedIn);
         welcomeLbl.setText("Welcome, " + LoginPageController.employeeLoggedIn.getFirstName());
-        employeesPane.fire();
+        System.out.println(LoginPageController.showPane);
+        System.out.println("this is s atest");
+        if(LoginPageController.showPane.equals("EmployeesPane")) employeesPane.fire();
+        if(LoginPageController.showPane.equals("CustomersPane")) customersPane.fire();
+        if(LoginPageController.showPane.equals("InvoicesPane")) invoicesPane.fire();
+        if(LoginPageController.showPane.equals("SettingsPane")) settingsPane.fire();
     }
 
     public void changeBtnColor(String btnID){

@@ -213,7 +213,7 @@
       </Label>
       <Button fx:id="addPaymentBtn" mnemonicParsing="false" text="Add Payment" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="13" />
       <Button fx:id="viewPaymentBtn" mnemonicParsing="false" text="View Payment" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-      <Label fx:id="cardEndingLbl" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Card Ending in 5555" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="13">
+      <Label fx:id="cardEndingLbl" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="13">
          <padding>
             <Insets right="10.0" />
          </padding>

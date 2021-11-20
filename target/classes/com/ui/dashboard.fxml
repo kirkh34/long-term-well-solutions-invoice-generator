@@ -21,7 +21,7 @@
                   </Label>
                </children>
             </Pane>
-            <Button fx:id="invoicesPane" mnemonicParsing="false" onAction="#changeContent" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #333;" text="Invoices" textFill="WHITE">
+            <Button fx:id="jobsPane" mnemonicParsing="false" onAction="#changeContent" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #333;" text="Jobs" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

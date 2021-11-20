@@ -8,6 +8,11 @@ module com.ltwsinvoicesystem.ltwsinvoicesystem {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.sql;
+    requires layout;
+    requires kernel;
+    requires javax.mail.api;
+    requires activation;
+    requires io;
 
     opens com.ui to javafx.fxml;
     opens com.ltws to javafx.fxml;

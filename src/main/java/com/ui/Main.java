@@ -34,6 +34,12 @@ public class Main extends Application {
         stage.show();
     }
 
+    public static void goToDashboard(ActionEvent event, String pane) throws IOException {
+        LoginPageController.showPane = pane;
+        CustomersPane.selectedCustomer = null;
+        goToPage(event,"dashboard.fxml", "LTWS Invoice System Dashboard");
+    }
+
         public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
                 Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 

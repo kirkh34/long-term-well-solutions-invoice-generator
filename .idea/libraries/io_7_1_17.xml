@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="io-7.1.17">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/main/libs/io-7.1.17.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

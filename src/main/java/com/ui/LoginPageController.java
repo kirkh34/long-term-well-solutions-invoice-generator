@@ -3,6 +3,7 @@ package com.ui;
 import com.jdbc.Database;
 import com.ltws.Customer;
 import com.ltws.Employee;
+import com.ltws.Job;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,6 +25,7 @@ public class LoginPageController implements Initializable {
     public static Employee employeeLoggedIn;
     public static ObservableList<Employee> allEmployees = FXCollections.observableArrayList();
     public static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+    public static ObservableList<Job> allJobs = FXCollections.observableArrayList();
 
     @FXML TextField usernameTxt;
     @FXML PasswordField passwordTxt;
@@ -58,6 +60,17 @@ public class LoginPageController implements Initializable {
         invalidLbl.setText("Test Credentials - Username: admin | password: password");
         allEmployees = Database.queryEmployees();
         allCustomers = Database.queryCustomers();
-        showPane = "CustomersPane";
+        allJobs = Database.queryJobs();
+        showPane = "JobsPane";
+    }
+
+    public static Customer getCustomerByID(int id){
+        Customer customer = null;
+        for(Customer cust : allCustomers){
+            if(cust.getID() == id) {
+                customer = cust;
+            }
+        }
+        return customer;
     }
 }

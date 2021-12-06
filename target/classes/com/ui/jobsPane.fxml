@@ -8,15 +8,15 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ui.JobsPane">
    <center>
-      <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="viewJobsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="jobNumCol" prefWidth="75.0" text="Job ID" />
-          <TableColumn fx:id="customerCol" prefWidth="100.0" text="Customer" />
-            <TableColumn fx:id="descriptionCol" prefWidth="125.0" text="Description" />
-            <TableColumn fx:id="startDateCol" prefWidth="75.0" text="Start Date" />
-            <TableColumn fx:id="endDateCol" prefWidth="75.0" text="End Date" />
-            <TableColumn fx:id="amountCol" prefWidth="75.0" text="Invoice" />
-            <TableColumn fx:id="paidCol" prefWidth="75.0" text="Paid" />
+          <TableColumn fx:id="jobIdCol" prefWidth="75.0" text="Job ID" />
+          <TableColumn fx:id="jobCustCol" prefWidth="100.0" text="Customer" />
+            <TableColumn fx:id="jobDescCol" prefWidth="125.0" text="Description" />
+            <TableColumn fx:id="jobStartDateCol" prefWidth="75.0" text="Start Date" />
+            <TableColumn fx:id="jobEndDateCol" prefWidth="75.0" text="End Date" />
+            <TableColumn fx:id="jobInvoicedCol" prefWidth="75.0" text="Invoice" />
+            <TableColumn fx:id="jobInvoicePaidCol" prefWidth="75.0" text="Paid" />
         </columns>
       </TableView>
    </center>

@@ -2,19 +2,25 @@ package com.jdbc;
 
 import com.ltws.Customer;
 import com.ltws.Employee;
+import com.ltws.Job;
 import com.ui.ViewCustomersPane;
 import com.ui.ViewEmployeePane;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.paint.Material;
+
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class Database {
 
-    private final static String PUBLIC_DNS = "long-term-well-solutions.cfyjyicdes3d.us-east-2.rds.amazonaws.com";
+    private final static String PUBLIC_DNS = "gator3139.hostgator.com";
     private final static String PORT = "3306";
-    private final static String DATABASE = "ltws";
-    private final static String DB_USERNAME = "admin";
-    private final static String DB_PASSWORD = "javaivytech";
+    private final static String DATABASE = "avidnexu_long_term_well_solutions";
+    private final static String DB_USERNAME = "avidnexu_ltws";
+    private final static String DB_PASSWORD = "sdev265ivytech";
     private static Connection conn = null;
     private static Statement st = null;
     private static PreparedStatement ps = null;
@@ -25,7 +31,7 @@ public class Database {
             // Load the database driver for MySQL.
             Class.forName("com.mysql.cj.jdbc.Driver");
             // Set database connection parameters.
-            String url = ("jdbc:mysql://" + PUBLIC_DNS + ":" + PORT + "/" + DATABASE);
+            String url = ("jdbc:mysql://" + PUBLIC_DNS + ":" + PORT + "/" + DATABASE + "?useSSL=false");
             // Create the database connection.
             conn = DriverManager.getConnection(url, (DB_USERNAME), (DB_PASSWORD));
         } catch (ClassNotFoundException | SQLException ex) {
@@ -454,4 +460,91 @@ public class Database {
         ps.setInt(4, cust.getCcZip());
         ps.setInt(5, id);
     }
+
+    //////////////////
+    //Job queries
+    //////////////////
+
+    //Get all customers and put them in an Observable List for TableView use
+    public static ObservableList<Job> queryJobs() {
+        ObservableList<Job> jobList = FXCollections.observableArrayList();
+        ArrayList<Integer> jobEmployeeIdList = new ArrayList();
+        ObservableList<Job.Material> materialList = FXCollections.observableArrayList();
+        ObservableList<Job.Labor> laborList = FXCollections.observableArrayList();
+        ObservableList<Job.Fee> feeList = FXCollections.observableArrayList();
+
+        try {
+            // get connection
+            conn = getConnection();
+            // our SQL SELECT query.
+            String query = "SELECT JOB.*, JOB_EMPLOYEE.JOB_EMPLOYEE_ID, MATERIAL.MATERIAL_DESCRIPTION, MATERIAL.MATERIAL_PRICE, LABOR.LABOR_DESCRIPTION, LABOR.LABOR_PRICE, FEE.FEE_DESCRIPTION, FEE.FEE_PRICE FROM JOB JOIN JOB_EMPLOYEE ON JOB.JOB_ID=JOB_EMPLOYEE.JOB_ID JOIN MATERIAL ON JOB.JOB_ID = MATERIAL.JOB_ID JOIN LABOR ON JOB.JOB_ID = LABOR.JOB_ID JOIN FEE ON JOB.JOB_ID = FEE.JOB_ID";
+            ps = conn.prepareCall(query);
+            rs = ps.executeQuery();
+            int counter = 1;
+            int counter2 = 1;
+            int counter3 = 1;
+            int counter4 = 1;
+            int counter5 = 1;
+
+            // iterate through the java ResultSet
+            while (rs.next()) {
+                //Build Job Employee List
+                int empID = rs.getInt("JOB_EMPLOYEE_ID");
+                if(!jobEmployeeIdList.contains(empID)) {
+                    jobEmployeeIdList.add(empID);
+                    System.out.println("ID: " + empID);
+                }
+                //Build Material List
+                String materialDesc = rs.getString("MATERIAL_DESCRIPTION");
+                double materialPrice = rs.getDouble("MATERIAL_PRICE");
+                Job.Material newMaterial = new Job.Material(materialDesc,materialPrice);
+                if(!materialList.contains(newMaterial)){
+                    materialList.add(newMaterial);
+                }
+                //Build Labor List
+                String laborDesc = rs.getString("LABOR_DESCRIPTION");
+                double laborPrice = rs.getDouble("LABOR_PRICE");
+                Job.Labor newLabor = new Job.Labor(laborDesc,laborPrice);
+                if(!laborList.contains(newLabor)){
+                    laborList.add(newLabor);
+                }
+                //Build Fee List
+                String feeDesc = rs.getString("FEE_DESCRIPTION");
+                double feePrice = rs.getDouble("FEE_PRICE");
+                Job.Fee newFee = new Job.Fee(feeDesc,feePrice);
+                if(!feeList.contains(newFee)){
+                    feeList.add(newFee);
+                }
+                if(rs.isLast()) {
+                    jobList.add(newJobFromDb(rs, jobEmployeeIdList, materialList, laborList, feeList));
+                }
+            }
+            System.out.println("DB - Query Jobs");
+            return jobList;
+        } catch (Exception e) {
+            System.err.println("Got an exception!");
+            System.err.println(e.getMessage());
+            System.err.println();
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { ps.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.close(); } catch (Exception e) { /* Ignored */ }
+        }
+    }
+
+    // Create a populated employee object from SELECT employee statement
+    private static Job newJobFromDb(ResultSet rs, ArrayList<Integer> empList, ObservableList<Job.Material> materialList, ObservableList<Job.Labor> laborList, ObservableList<Job.Fee> feeList ) throws SQLException {
+        int id = rs.getInt("JOB_ID");
+        int custId = rs.getInt("JOB_CUSTOMER");
+        //Date jobStart = rs.getDate("JOB_START");
+        //Date jobEnd = rs.getDate("JOB_END");
+        String jobDesc = rs.getString("JOB_DESCRIPTION");
+        boolean isPaid = rs.getBoolean("JOB_PAID");
+
+        return new Job(id, custId, empList, LocalDate.now(),LocalDate.now(), jobDesc, isPaid, materialList, laborList, feeList);
+    }
+
 }

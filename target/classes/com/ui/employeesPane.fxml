@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -20,12 +22,23 @@
                   <TableColumn fx:id="isAdminCol" prefWidth="48.0" text="Admin" />
                </columns>
             </TableView>
-            <Pane prefHeight="50.0" prefWidth="200.0">
+            <HBox prefHeight="50.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="viewEmployeeBtn" layoutX="143.0" layoutY="10.0" mnemonicParsing="false" onAction="#onViewEmployee" prefHeight="30.0" prefWidth="100.0" text="View" />
-                  <Button fx:id="addEmployeeBtn" layoutX="358.0" layoutY="10.0" mnemonicParsing="false" onAction="#onViewEmployee" prefHeight="30.0" prefWidth="100.0" text="Add" />
+                  <Button fx:id="viewEmployeeBtn" mnemonicParsing="false" onAction="#onViewEmployee" prefHeight="30.0" prefWidth="125.0" text="View Employee">
+                     <HBox.margin>
+                        <Insets right="50.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="addEmployeeBtn" mnemonicParsing="false" onAction="#onViewEmployee" prefHeight="30.0" prefWidth="125.0" text="Add Employee">
+                     <HBox.margin>
+                        <Insets top="10.0" />
+                     </HBox.margin>
+                  </Button>
                </children>
-            </Pane>
+               <VBox.margin>
+                  <Insets left="150.0" />
+               </VBox.margin>
+            </HBox>
          </children>
       </VBox>
    </children>

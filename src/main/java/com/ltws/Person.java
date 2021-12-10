@@ -1,6 +1,6 @@
 package com.ltws;
 
-abstract class Person {
+public class Person {
     private int ID;
     private String firstName;
     private String lastName;

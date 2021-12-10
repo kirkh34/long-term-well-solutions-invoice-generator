@@ -1,31 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ui.JobsPane">
-   <center>
-      <TableView fx:id="viewJobsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <columns>
-          <TableColumn fx:id="jobIdCol" prefWidth="75.0" text="Job ID" />
-          <TableColumn fx:id="jobCustCol" prefWidth="100.0" text="Customer" />
-            <TableColumn fx:id="jobDescCol" prefWidth="125.0" text="Description" />
-            <TableColumn fx:id="jobStartDateCol" prefWidth="75.0" text="Start Date" />
-            <TableColumn fx:id="jobEndDateCol" prefWidth="75.0" text="End Date" />
-            <TableColumn fx:id="jobInvoicedCol" prefWidth="75.0" text="Invoice" />
-            <TableColumn fx:id="jobInvoicePaidCol" prefWidth="75.0" text="Paid" />
-        </columns>
-      </TableView>
-   </center>
-   <bottom>
-      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+
+<Pane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ui.JobsPane">
+   <children>
+      <VBox>
          <children>
-            <Button fx:id="viewJobBtn" mnemonicParsing="false" onAction="#viewJobAction" text="View Job" />
-            <Button fx:id="addJobBtn" mnemonicParsing="false" onAction="#addJobAction" text="Add Job" />
+            <TableView fx:id="viewJobsTable" prefHeight="550.0" prefWidth="600.0">
+              <columns>
+                <TableColumn fx:id="jobIdCol" prefWidth="75.0" text="Job ID" />
+                <TableColumn fx:id="jobCustCol" prefWidth="100.0" text="Customer" />
+                  <TableColumn fx:id="jobDescCol" prefWidth="125.0" text="Description" />
+                  <TableColumn fx:id="jobStartDateCol" prefWidth="75.0" text="Start Date" />
+                  <TableColumn fx:id="jobEndDateCol" prefWidth="75.0" text="End Date" />
+                  <TableColumn fx:id="jobInvoicedCol" prefWidth="75.0" text="Invoice" />
+                  <TableColumn fx:id="jobInvoicePaidCol" prefWidth="73.0" text="Paid" />
+              </columns>
+            </TableView>
+            <HBox prefHeight="50.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="viewJobBtn" mnemonicParsing="false" onAction="#viewJobAction" prefHeight="30.0" prefWidth="125.0" text="View Job">
+                     <HBox.margin>
+                        <Insets right="50.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="addJobBtn" mnemonicParsing="false" onAction="#addJobAction" prefHeight="30.0" prefWidth="125.0" text="Add Job">
+                     <HBox.margin>
+                        <Insets top="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets left="150.0" />
+               </VBox.margin>
+            </HBox>
          </children>
-      </HBox>
-   </bottom>
-</BorderPane>
+      </VBox>
+   </children>
+</Pane>

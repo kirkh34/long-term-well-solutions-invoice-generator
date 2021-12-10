@@ -3,8 +3,7 @@ package com.jdbc;
 import com.ltws.Customer;
 import com.ltws.Employee;
 import com.ltws.Job;
-import com.ui.ViewCustomersPane;
-import com.ui.ViewEmployeePane;
+import com.ui.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Material;
@@ -12,6 +11,8 @@ import javafx.scene.paint.Material;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.ListIterator;
 
 public class Database {
@@ -465,58 +466,96 @@ public class Database {
     //Job queries
     //////////////////
 
-    //Get all customers and put them in an Observable List for TableView use
+    //Get all jobs and put them in an Observable List for TableView use
     public static ObservableList<Job> queryJobs() {
         ObservableList<Job> jobList = FXCollections.observableArrayList();
         ArrayList<Integer> jobEmployeeIdList = new ArrayList();
         ObservableList<Job.Material> materialList = FXCollections.observableArrayList();
         ObservableList<Job.Labor> laborList = FXCollections.observableArrayList();
         ObservableList<Job.Fee> feeList = FXCollections.observableArrayList();
-
+        int prevId = 0;
+        int currentId = 0;
+        int currentCustId = 0;
+        Date currentJobStart = null;
+        Date currentJobEnd = null;
+        String currentJobDesc = null;
+        boolean currentJobIsPaid = false;
         try {
             // get connection
             conn = getConnection();
             // our SQL SELECT query.
-            String query = "SELECT JOB.*, JOB_EMPLOYEE.JOB_EMPLOYEE_ID, MATERIAL.MATERIAL_DESCRIPTION, MATERIAL.MATERIAL_PRICE, LABOR.LABOR_DESCRIPTION, LABOR.LABOR_PRICE, FEE.FEE_DESCRIPTION, FEE.FEE_PRICE FROM JOB JOIN JOB_EMPLOYEE ON JOB.JOB_ID=JOB_EMPLOYEE.JOB_ID JOIN MATERIAL ON JOB.JOB_ID = MATERIAL.JOB_ID JOIN LABOR ON JOB.JOB_ID = LABOR.JOB_ID JOIN FEE ON JOB.JOB_ID = FEE.JOB_ID";
+            String query = "SELECT JOB.*, JOB_EMPLOYEE.JOB_EMPLOYEE_ID, MATERIAL.MATERIAL_DESCRIPTION, MATERIAL.MATERIAL_PRICE, LABOR.LABOR_DESCRIPTION, LABOR.LABOR_PRICE, FEE.FEE_DESCRIPTION, FEE.FEE_PRICE FROM JOB LEFT JOIN JOB_EMPLOYEE ON JOB.JOB_ID=JOB_EMPLOYEE.JOB_ID LEFT JOIN MATERIAL ON JOB.JOB_ID = MATERIAL.JOB_ID LEFT JOIN LABOR ON JOB.JOB_ID = LABOR.JOB_ID LEFT JOIN FEE ON JOB.JOB_ID = FEE.JOB_ID";
             ps = conn.prepareCall(query);
             rs = ps.executeQuery();
-            int counter = 1;
-            int counter2 = 1;
-            int counter3 = 1;
-            int counter4 = 1;
-            int counter5 = 1;
 
             // iterate through the java ResultSet
             while (rs.next()) {
+                if(rs.isFirst()) prevId = rs.getInt("JOB_ID");
+                if(rs.getInt("JOB_ID") != prevId){
+                    System.out.println("running");
+
+                    ArrayList<Integer> currentEmpList = new ArrayList<>();
+                    ObservableList<Job.Material> currentMaterialList = FXCollections.observableArrayList();
+                    ObservableList<Job.Labor> currentLaborList = FXCollections.observableArrayList();
+                    ObservableList<Job.Fee> currentFeeList = FXCollections.observableArrayList();
+                    for(int id : jobEmployeeIdList){
+                        currentEmpList.add(id);
+                    }
+                    for(Job.Material mat: materialList){
+                        currentMaterialList.add(mat);
+                    }
+                    for(Job.Labor labor: laborList){
+                        currentLaborList.add(labor);
+                    }
+                    for(Job.Fee fee: feeList){
+                        currentFeeList.add(fee);
+                    }
+
+                    Job currentJob = new Job(currentId, currentCustId, currentEmpList, currentJobStart.toLocalDate(), currentJobEnd.toLocalDate(), currentJobDesc, currentJobIsPaid, currentMaterialList, currentLaborList, currentFeeList);
+                    jobList.add(currentJob);
+                    jobEmployeeIdList.clear();
+                    materialList.clear();
+                    laborList.clear();
+                    feeList.clear();
+                    prevId = rs.getInt("JOB_ID");
+                }
+
+                currentId = rs.getInt("JOB_ID");
+                currentCustId = rs.getInt("JOB_CUSTOMER");
+                currentJobStart = rs.getDate("JOB_START");
+                currentJobEnd = rs.getDate("JOB_END");
+                currentJobDesc = rs.getString("JOB_DESCRIPTION");
+                currentJobIsPaid = rs.getBoolean("JOB_PAID");
+
                 //Build Job Employee List
                 int empID = rs.getInt("JOB_EMPLOYEE_ID");
-                if(!jobEmployeeIdList.contains(empID)) {
+                if (!jobEmployeeIdList.contains(empID) && empID != 0) {
                     jobEmployeeIdList.add(empID);
-                    System.out.println("ID: " + empID);
                 }
                 //Build Material List
                 String materialDesc = rs.getString("MATERIAL_DESCRIPTION");
                 double materialPrice = rs.getDouble("MATERIAL_PRICE");
-                Job.Material newMaterial = new Job.Material(materialDesc,materialPrice);
-                if(!materialList.contains(newMaterial)){
+                Job.Material newMaterial = new Job.Material(materialDesc, materialPrice);
+                if (materialDesc != null && !materialList.contains(newMaterial)) {
                     materialList.add(newMaterial);
                 }
                 //Build Labor List
                 String laborDesc = rs.getString("LABOR_DESCRIPTION");
                 double laborPrice = rs.getDouble("LABOR_PRICE");
-                Job.Labor newLabor = new Job.Labor(laborDesc,laborPrice);
-                if(!laborList.contains(newLabor)){
+                Job.Labor newLabor = new Job.Labor(laborDesc, laborPrice);
+                if (laborDesc != null && !laborList.contains(newLabor)) {
                     laborList.add(newLabor);
                 }
                 //Build Fee List
                 String feeDesc = rs.getString("FEE_DESCRIPTION");
                 double feePrice = rs.getDouble("FEE_PRICE");
-                Job.Fee newFee = new Job.Fee(feeDesc,feePrice);
-                if(!feeList.contains(newFee)){
+                Job.Fee newFee = new Job.Fee(feeDesc, feePrice);
+                if (feeDesc != null && !feeList.contains(newFee)) {
                     feeList.add(newFee);
                 }
-                if(rs.isLast()) {
-                    jobList.add(newJobFromDb(rs, jobEmployeeIdList, materialList, laborList, feeList));
+                if(rs.isLast()){
+                    Job currentJob = new Job(currentId, currentCustId, jobEmployeeIdList, currentJobStart.toLocalDate(), currentJobEnd.toLocalDate(), currentJobDesc, currentJobIsPaid, materialList, laborList, feeList);
+                    jobList.add(currentJob);
                 }
             }
             System.out.println("DB - Query Jobs");
@@ -535,16 +574,231 @@ public class Database {
         }
     }
 
-    // Create a populated employee object from SELECT employee statement
-    private static Job newJobFromDb(ResultSet rs, ArrayList<Integer> empList, ObservableList<Job.Material> materialList, ObservableList<Job.Labor> laborList, ObservableList<Job.Fee> feeList ) throws SQLException {
-        int id = rs.getInt("JOB_ID");
-        int custId = rs.getInt("JOB_CUSTOMER");
-        //Date jobStart = rs.getDate("JOB_START");
-        //Date jobEnd = rs.getDate("JOB_END");
-        String jobDesc = rs.getString("JOB_DESCRIPTION");
-        boolean isPaid = rs.getBoolean("JOB_PAID");
 
-        return new Job(id, custId, empList, LocalDate.now(),LocalDate.now(), jobDesc, isPaid, materialList, laborList, feeList);
+    //Update single job record in the DB by id
+    public static void updateJob(Job job){
+
+        boolean jobChanged = false;
+        for(Job j : LoginPageController.allJobs) {
+            if (j.getID() == job.getID()) {
+                if (j.getInvoicePaid() != job.getInvoicePaid()) jobChanged = true;
+                if (!(j.getJobDesc().equals(job.getJobDesc()))) jobChanged = true;
+                if (!(j.getJobStart().equals(job.getJobStart()))) jobChanged = true;
+                if (!(j.getJobEnd().equals(job.getJobEnd()))) jobChanged = true;
+            }
+        }
+
+        try{
+            conn = Database.getConnection();
+
+            if(jobChanged) {
+                // our SQL SELECT query.
+                int invoicePaid = job.getInvoicePaid() ? 1 : 0;
+                String query = "UPDATE JOB SET JOB_START=?, JOB_END=?, JOB_DESCRIPTION=?, JOB_PAID=? WHERE JOB_ID=?";
+                // Create prepared statement with query
+                ps = conn.prepareCall(query);
+                // Set values in query
+                setJobValues(job, ps, invoicePaid);
+                ps.setInt(5, job.getID());
+                // Execute UPDATE query
+                ps.executeUpdate();
+                System.out.println("DB - Update Job");
+                ps.close();
+
+            }
+            boolean empListMatching = false;
+            for(Job j : LoginPageController.allJobs){
+                if (j.getID() == job.getID()){
+                    Collections.sort(j.getJobEmployees());
+                    Collections.sort(job.getJobEmployees());
+                    empListMatching = j.getJobEmployees().equals(job.getJobEmployees());
+                }
+            }
+
+            if(!empListMatching) {
+                String query2 = "DELETE FROM JOB_EMPLOYEE WHERE JOB_ID=?";
+                // create the java statement
+                ps = conn.prepareCall(query2);
+                ps.setInt(1, job.getID());
+                // execute query
+                ps.executeUpdate();
+                System.out.println("DB - Remove Employees on Job");
+
+                String values = "";
+
+                for (int i = 0; i < job.getJobEmployees().size(); i++) {
+                    String comma = i == (job.getJobEmployees().size() - 1) ? "" : ",";
+                    String row = "(" + job.getJobEmployees().get(i) + "," + job.getID() + ")" + comma;
+                    values += row;
+                }
+                String query3 = "INSERT INTO JOB_EMPLOYEE (JOB_EMPLOYEE_ID, JOB_ID) VALUES " + values;
+
+                st = conn.createStatement();
+                st.executeUpdate(query3);
+                System.out.println("DB - Insert Employees on Job");
+            }
+
+            boolean matListMatching = false;
+            for(Job j : LoginPageController.allJobs){
+                if (j.getID() == job.getID()){
+                    matListMatching = j.getMaterialOList().equals(job.getMaterialOList());
+                }
+            }
+            if(!matListMatching) {
+                String query4 = "DELETE FROM MATERIAL WHERE JOB_ID=?";
+                // create the java statement
+                ps = conn.prepareCall(query4);
+                ps.setInt(1, job.getID());
+                // execute query
+                ps.executeUpdate();
+                System.out.println("DB - Remove Materials on Job");
+
+                String values = "";
+
+                for (int i = 0; i < job.getMaterialOList().size(); i++) {
+                    String comma = i == (job.getMaterialOList().size() - 1) ? "" : ",";
+                    String row = "(" + job.getMaterialOList().get(i).getItemPrice() + ",'" + job.getMaterialOList().get(i).getItemDesc() + "'," + job.getID() + ")" + comma;
+                    values += row;
+                }
+                String query5 = "INSERT INTO MATERIAL (MATERIAL_PRICE, MATERIAL_DESCRIPTION, JOB_ID) VALUES " + values;
+
+                st = conn.createStatement();
+                st.executeUpdate(query5);
+                System.out.println("DB - Insert Materials on Job");
+            }
+
+            boolean laborListMatching = false;
+            for(Job j : LoginPageController.allJobs){
+                if (j.getID() == job.getID()){
+                    laborListMatching = j.getLaborOList().equals(job.getLaborOList());
+                }
+            }
+            if(!laborListMatching) {
+                String query6 = "DELETE FROM LABOR WHERE JOB_ID=?";
+                // create the java statement
+                ps = conn.prepareCall(query6);
+                ps.setInt(1, job.getID());
+                // execute query
+                ps.executeUpdate();
+                System.out.println("DB - Remove Labor on Job");
+
+                String values = "";
+
+                for (int i = 0; i < job.getLaborOList().size(); i++) {
+                    String comma = i == (job.getLaborOList().size() - 1) ? "" : ",";
+                    String row = "(" + job.getLaborOList().get(i).getItemPrice() + ",'" + job.getLaborOList().get(i).getItemDesc() + "'," + job.getID() + ")" + comma;
+                    values += row;
+                }
+                String query7 = "INSERT INTO LABOR (LABOR_PRICE, LABOR_DESCRIPTION, JOB_ID) VALUES " + values;
+
+                st = conn.createStatement();
+                st.executeUpdate(query7);
+                System.out.println("DB - Insert Labor on Job");
+            }
+
+            boolean feeListMatching = false;
+            for(Job j : LoginPageController.allJobs){
+                if (j.getID() == job.getID()){
+                    feeListMatching = j.getFeeOList().equals(job.getFeeOList());
+                }
+            }
+            if(!feeListMatching) {
+                String query8 = "DELETE FROM FEE WHERE JOB_ID=?";
+                // create the java statement
+                ps = conn.prepareCall(query8);
+                ps.setInt(1, job.getID());
+                // execute query
+                ps.executeUpdate();
+                System.out.println("DB - Remove Fee on Job");
+
+                String values = "";
+
+                for (int i = 0; i < job.getFeeOList().size(); i++) {
+                    String comma = i == (job.getFeeOList().size() - 1) ? "" : ",";
+                    String row = "(" + job.getFeeOList().get(i).getItemPrice() + ",'" + job.getFeeOList().get(i).getItemDesc() + "'," + job.getID() + ")" + comma;
+                    values += row;
+                }
+                String query9 = "INSERT INTO FEE (FEE_PRICE, FEE_DESCRIPTION, JOB_ID) VALUES " + values;
+
+                st = conn.createStatement();
+                st.executeUpdate(query9);
+                System.out.println("DB - Insert Fee on Job");
+            }
+
+
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        finally {
+            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { ps.close(); } catch (Exception e) { /* Ignored */ }
+            try { st.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.close(); } catch (Exception e) { /* Ignored */ }
+        }
+    }
+
+    private static void setJobValues(Job job, PreparedStatement ps, int invoicePaid) throws SQLException {
+        ps.setString(1, job.getJobStart().toString().trim());
+        ps.setString(2, job.getJobEnd().toString().trim());
+        ps.setString(3, job.getJobDesc().trim());
+        ps.setLong(4, invoicePaid);
+    }
+
+
+    //Insert new job into DB
+    public static void insertJob(Job job){
+        try{
+
+            conn = getConnection();
+            String query = "INSERT INTO JOB (JOB_CUSTOMER, JOB_START, JOB_END, JOB_DESCRIPTION, JOB_PAID) VALUES (?,?,?,?,?)";
+            ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setInt(1, job.getCustID());
+            ps.setDate(2, Date.valueOf(job.getJobStart()));
+            ps.setDate(3, Date.valueOf(job.getJobEnd()));
+            ps.setString(4, job.getJobDesc());
+            ps.setBoolean(5, job.getInvoicePaid());
+            ps.executeUpdate();
+            System.out.println("DB - Insert Job into DB");
+            rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                ViewJobPane.lastInsertID = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+            finally {
+            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { ps.close(); } catch (Exception e) { /* Ignored */ }
+            try { st.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.close(); } catch (Exception e) { /* Ignored */ }
+        }
+
+    }
+
+    //Delete single job from DB by id
+    public static void deleteJob(int id) {
+        try{
+            conn = Database.getConnection();
+            // our SQL SELECT query.
+            // if you only need a few columns, specify them by name instead of using "*"
+            String query = "DELETE FROM JOB WHERE JOB_ID=?";
+            // create the java statement
+            ps = conn.prepareCall(query);
+            ps.setInt(1, id);
+            // execute query
+            ps.executeUpdate();
+            System.out.println("DB - Delete Job");
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        finally {
+            try { ps.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.close(); } catch (Exception e) { /* Ignored */ }
+        }
     }
 
 }

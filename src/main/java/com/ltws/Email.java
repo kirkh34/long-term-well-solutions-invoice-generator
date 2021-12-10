@@ -101,8 +101,6 @@ public class Email {
     }
 
     public  void writePdf(OutputStream outputStream) throws Exception {
-        //String userHomeFolder = System.getProperty("user.home");
-        //File textFile = new File(userHomeFolder, "hello.pdf");
         PdfDocument pdf = new PdfDocument(new PdfWriter(outputStream));
         Document document = new Document(pdf);
         String line = "Hello! Welcome to iTextPdf";

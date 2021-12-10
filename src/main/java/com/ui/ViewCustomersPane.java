@@ -72,6 +72,7 @@ public class ViewCustomersPane implements Initializable {
     public Customer customer = CustomersPane.selectedCustomer;
     public static int lastInsertID_Customer;
     public static boolean addingPayment = false;
+    public static boolean comingFromJob = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -207,7 +208,12 @@ public class ViewCustomersPane implements Initializable {
             if(validateFields()) {
                 Database.updateCustomer(customer);
                 customer = null;
-                goToDashboard(event);
+                if(comingFromJob) {
+                    Main.goToPage(event, "viewJobPane.fxml", "Viewing Job for " + JobsPane.jobSelected.getCustName());
+                    comingFromJob = false;
+                } else {
+                    goToDashboard(event);
+                }
             }
         } else if(CustomersPane.addingNewCustomer) {
             System.out.println("Selected Radio");
@@ -249,9 +255,14 @@ public class ViewCustomersPane implements Initializable {
 
 
     public void goToDashboard(ActionEvent event) throws IOException {
-        CustomersPane.selectedCustomer = null;
-        Main.goToPage(event,"dashboard.fxml", "LTWS Invoice System Dashboard");
-        LoginPageController.showPane = "CustomersPane";
+        if(comingFromJob) {
+            Main.goToPage(event, "viewJobPane.fxml", "Viewing Job for " + JobsPane.jobSelected.getCustName());
+            comingFromJob = false;
+        } else {
+            CustomersPane.selectedCustomer = null;
+            Main.goToPage(event,"dashboard.fxml", "LTWS Invoice System Dashboard");
+            LoginPageController.showPane = "CustomersPane";
+        }
     }
 
     private void enableFields() {

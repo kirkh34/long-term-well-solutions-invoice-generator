@@ -57,7 +57,7 @@ public class LoginPageController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         usernameTxt.setText("admin");
         passwordTxt.setText("password");
-        invalidLbl.setText("Test Credentials - Username: admin | password: password");
+        //invalidLbl.setText("Test Credentials - Username: admin | password: password");
         allEmployees = Database.queryEmployees();
         allCustomers = Database.queryCustomers();
         allJobs = Database.queryJobs();

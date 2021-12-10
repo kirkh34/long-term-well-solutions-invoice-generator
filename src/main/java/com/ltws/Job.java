@@ -1,6 +1,5 @@
 package com.ltws;
 import com.ui.LoginPageController;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
@@ -11,7 +10,7 @@ public class Job {
     private int ID;
     private int custID;
     private String custName;
-    private ArrayList<Integer> jobEmployees;
+    public ArrayList<Integer> jobEmployees;
     private LocalDate jobStart;
     private LocalDate jobEnd;
     private String jobDesc;
@@ -22,6 +21,19 @@ public class Job {
 
     public Job(int ID, int custID, ArrayList<Integer> jobEmployees, LocalDate jobStart, LocalDate jobEnd, String jobDesc, Boolean invoicePaid, ObservableList<Material> materialOList, ObservableList<Labor> laborOList, ObservableList<Fee> feeOList) {
         this.ID = ID;
+        this.custID = custID;
+        this.jobEmployees = jobEmployees;
+        this.jobStart = jobStart;
+        this.jobEnd = jobEnd;
+        this.jobDesc = jobDesc;
+        this.invoicePaid = invoicePaid;
+        this.materialOList = materialOList;
+        this.laborOList = laborOList;
+        this.feeOList = feeOList;
+        setCustomerName();
+    }
+
+    public Job(int custID, ArrayList<Integer> jobEmployees, LocalDate jobStart, LocalDate jobEnd, String jobDesc, Boolean invoicePaid, ObservableList<Material> materialOList, ObservableList<Labor> laborOList, ObservableList<Fee> feeOList) {
         this.custID = custID;
         this.jobEmployees = jobEmployees;
         this.jobStart = jobStart;

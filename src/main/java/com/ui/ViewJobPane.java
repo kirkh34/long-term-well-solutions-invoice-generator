@@ -1,23 +1,26 @@
 package com.ui;
+import com.jdbc.Database;
 import com.ltws.Customer;
 import com.ltws.Employee;
 import com.ltws.Job;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
+import com.ltws.Person;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ObservableDoubleValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import com.ltws.GenerateInvoice;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class ViewJobPane implements Initializable {
     //Information Tab
@@ -45,8 +48,6 @@ public class ViewJobPane implements Initializable {
     Button downloadInvoiceBtn;
     @FXML
     Button emailInvoiceBtn;
-    @FXML
-    Button saveInvoiceStatusBtn;
     @FXML
     Button addEmpJobBtn;
     @FXML
@@ -131,7 +132,9 @@ public class ViewJobPane implements Initializable {
     ObservableList<Job.Labor> laborList = FXCollections.observableArrayList();
     ObservableList<Job.Fee> feesList = FXCollections.observableArrayList();
 
-
+    public static boolean addingJob;
+    public static int lastInsertID;
+    public Customer jobCustomer;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //materialList.add(new Job.Material("Some Wood",33.00));
@@ -147,21 +150,24 @@ public class ViewJobPane implements Initializable {
         initEmployeeJobList();
         initTables();
         updateTotals();
+        if(addingJob){
+            deleteJobBtn.setVisible(false);
+        } else{
+            deleteJobBtn.setVisible(true);
+        }
     }
 
     public void initEmployeeJobList() {
         for (Employee emp : LoginPageController.allEmployees) {
             for (int empID : JobsPane.jobSelected.getJobEmployees()) {
-           // System.out.println(empID);
+            System.out.println(empID);
                 if (emp.getID() == empID) {
-                    System.out.println("yes sir");
                     empJobList.add(emp.getFirstName() + " " + emp.getLastName());
                 }
             }
         }
         empJobListView.setItems(empJobList);
     }
-
 
     public void initJob(){
         materialList = JobsPane.jobSelected.getMaterialOList();
@@ -180,10 +186,11 @@ public class ViewJobPane implements Initializable {
     public void setCustomerInfo(){
         for (Customer cust : LoginPageController.allCustomers) {
                 if (cust.getID() == JobsPane.jobSelected.getCustID()) {
+                    jobCustomer = cust;
                     custNameLbl.setText(cust.getFirstName() + " " + cust.getLastName());
                     custStreetLbl.setText(cust.getStreet());
                     custCityStateZipLbl.setText(cust.getCity() + ", " + cust.getState() + " " + cust.getZip());
-                    custPhoneLbl.setText(String.valueOf(cust.getPhone()));
+                    custPhoneLbl.setText(String.valueOf(cust.getPhone()).replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3"));
                     custEmailLbl.setText(cust.getEmail());
                 }
         }
@@ -242,24 +249,70 @@ public class ViewJobPane implements Initializable {
     // Info Tab - Button Action Events
     public void viewCustInfoAction(ActionEvent event) throws IOException {
         CustomersPane.selectedCustomer = LoginPageController.getCustomerByID(JobsPane.jobSelected.getCustID());
+        ViewCustomersPane.comingFromJob = true;
         Main.goToPage(event, "viewCustomersPane.fxml","Viewing Customer  " + CustomersPane.selectedCustomer.getFirstName() + " " + CustomersPane.selectedCustomer.getLastName());
     }
-
-    public void downloadInvoiceAction(){}
-
-    public void emailInvoiceAction(){}
-
-    public void saveInvoiceStatusAction(){
-        if(unpaidInvoiceRadio.isSelected()){
-            System.out.println("Unpaid");
-        }else if (paidInvoiceRadio.isSelected()){
-            System.out.println("Paid");
+    boolean running = false;
+    public void updateJobDesc(){
+        if(!running) {
+            running = true;
+            CompletableFuture.delayedExecutor(2, TimeUnit.SECONDS).execute(() -> {
+                JobsPane.jobSelected.setJobDesc(jobDescTxtArea.getText());
+                System.out.println(jobDescTxtArea.getText());
+                running = false;
+            });
         }
+    }
+
+    public void toggleUnpaidRadio(){
+        JobsPane.jobSelected.setInvoicePaid(false);
+    }
+
+    public void togglePaidRadio(){
+        JobsPane.jobSelected.setInvoicePaid(true);
+    }
+
+    public void downloadInvoiceAction() throws Exception {
+        if(JobsPane.jobSelected.getMaterialOList().isEmpty() && JobsPane.jobSelected.getLaborOList().isEmpty() && JobsPane.jobSelected.getFeeOList().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Unable to generate invoice.  Please add either materials, labor, or fees to job");
+            alert.showAndWait();
+        }else {
+            double total = materialsTotal() + laborTotal() + feesTotal();
+            Person company = new Person(1, "Long Term", "Well Solutions", "ltwsinvoices@gmail.com", "123 Easy Street", "Crawfordsville", "IN", 47933, 7653654362L);
+            GenerateInvoice invoice = new GenerateInvoice(JobsPane.jobSelected, jobCustomer, company, total);
+            invoice.download();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Invoice was saved to your downloads folder");
+            alert.showAndWait();
+        }
+    }
+
+    public void emailInvoiceAction(){
+        if(JobsPane.jobSelected.getMaterialOList().isEmpty() && JobsPane.jobSelected.getLaborOList().isEmpty() && JobsPane.jobSelected.getFeeOList().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Unable to email invoice.  Please add either materials, labor, or fees to job");
+            alert.showAndWait();
+        }else {
+            double total = materialsTotal() + laborTotal() + feesTotal();
+            Person company = new Person(1, "Long Term", "Well Solutions", "ltwsinvoices@gmail.com", "123 Easy Street", "Crawfordsville", "IN", 47933, 7653654362L);
+            GenerateInvoice invoice = new GenerateInvoice(JobsPane.jobSelected, jobCustomer, company, total);
+            invoice.email(jobCustomer.getEmail());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Invoice was emailed to the customer");
+            alert.showAndWait();
+        }
+    }
+
+    public void onChangeStartDate(){
+        JobsPane.jobSelected.setJobStart(jobStartDate.getValue());
+    }
+
+    public void onChangeEndDate(){
+        JobsPane.jobSelected.setJobEnd(jobEndDate.getValue());
     }
 
     public void addEmpJobAction(){
         if(empJobCombo.getValue() != null && !empJobList.contains((String) empJobCombo.getValue())) {
             empJobList.add((String) empJobCombo.getValue());
+            int id = getEmpIdbyName((String) empJobCombo.getValue());
+            JobsPane.jobSelected.jobEmployees.add(id);
         }else if(empJobCombo.getValue() == null){
             Alert alert = new Alert(Alert.AlertType.WARNING, "Please select an employee first!");
             alert.showAndWait();
@@ -273,17 +326,68 @@ public class ViewJobPane implements Initializable {
     }
 
     public void removeEmpJobAction(){
+        int id = getEmpIdbyName(empJobListView.getSelectionModel().getSelectedItem().toString());
+        JobsPane.jobSelected.jobEmployees.remove(Integer.valueOf(id));
         empJobList.remove(empJobListView.getSelectionModel().getSelectedItem());
     }
 
+    public static int getEmpIdbyName(String name){
+        int id = 0;
+        String[] firstAndLast = name.split("\\s+");
+        String first = firstAndLast[0].trim();
+        String last = firstAndLast[1].trim();
+        for (Employee emp : LoginPageController.allEmployees) {
+            if(first.equals(emp.getFirstName()) && last.equals(emp.getLastName())){
+                id = emp.getID();
+            }
+        }
+        return id;
+    }
+
     public void saveJobAction(ActionEvent event){
-        System.out.println("saved job");
+        if(addingJob){
+            Database.insertJob(JobsPane.jobSelected);
+            JobsPane.jobSelected.setID(lastInsertID);
+            LoginPageController.allJobs.add(JobsPane.jobSelected);
+            deleteJobBtn.setVisible(true);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setTitle("Viewing Job for " + JobsPane.jobSelected.getCustName());
+            addingJob = false;
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Job was created");
+            alert.showAndWait();
+        } else {
+            Database.updateJob(JobsPane.jobSelected);
+
+            Job oldJob = null;
+            for(Job job : LoginPageController.allJobs){
+                if(job.getID() == JobsPane.jobSelected.getID()) oldJob = job;
+            }
+            LoginPageController.allJobs.remove(oldJob);
+            LoginPageController.allJobs.add(JobsPane.jobSelected);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Job was saved");
+            alert.showAndWait();
+        }
+
     }
 
     public void cancelJobAction(ActionEvent event) throws IOException {
+        JobsPane.jobSelected = null;
         Main.goToDashboard(event, "JobsPane");
     }
-    public void deleteJobAction(){}
+    public void deleteJobAction(ActionEvent event) throws IOException{
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this job?");
+        alert.showAndWait();
+        if(alert.getResult() == ButtonType.OK) {
+            Database.deleteJob(JobsPane.jobSelected.getID());
+            Job oldJob = null;
+            for(Job job : LoginPageController.allJobs){
+                if(job.getID() == JobsPane.jobSelected.getID()) oldJob = job;
+            }
+            LoginPageController.allJobs.remove(oldJob);
+            JobsPane.jobSelected = null;
+            Main.goToDashboard(event, "JobsPane");
+        }
+    }
 
     // Materials Tab - Button Action Events
     public void materialsAddAction(){
@@ -292,6 +396,7 @@ public class ViewJobPane implements Initializable {
             materialsDescTxt.clear();
             materialsPriceTxt.clear();
             updateTotals();
+            JobsPane.jobSelected.setMaterialOList(materialList);
         }
     }
 
@@ -300,6 +405,7 @@ public class ViewJobPane implements Initializable {
             Job.Material materialSelected = (Job.Material) materialsTable.getSelectionModel().getSelectedItem();
             materialList.removeIf(materialSelected::equals);
             updateTotals();
+            JobsPane.jobSelected.setMaterialOList(materialList);
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR, "You must select an item to delete!");
             alert.showAndWait();
@@ -313,6 +419,7 @@ public class ViewJobPane implements Initializable {
             laborDescTxt.clear();
             laborPriceTxt.clear();
             updateTotals();
+            JobsPane.jobSelected.setLaborOList(laborList);
         }
     }
 
@@ -321,6 +428,7 @@ public class ViewJobPane implements Initializable {
             Job.Labor laborSelected = (Job.Labor) laborTable.getSelectionModel().getSelectedItem();
             laborList.removeIf(laborSelected::equals);
             updateTotals();
+            JobsPane.jobSelected.setLaborOList(laborList);
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR, "You must select an item to delete!");
             alert.showAndWait();
@@ -334,6 +442,7 @@ public class ViewJobPane implements Initializable {
             feesDescTxt.clear();
             feesPriceTxt.clear();
             updateTotals();
+            JobsPane.jobSelected.setFeeOList(feesList);
         }
     }
 
@@ -342,6 +451,7 @@ public class ViewJobPane implements Initializable {
             Job.Fee feeSelected = (Job.Fee) feesTable.getSelectionModel().getSelectedItem();
             feesList.removeIf(feeSelected::equals);
             updateTotals();
+            JobsPane.jobSelected.setFeeOList(feesList);
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR, "You must select an item to delete!");
             alert.showAndWait();

@@ -84,16 +84,16 @@ public class ViewPayment implements Initializable {
         CustomersPane.selectedCustomer.setCcExp(0);
         CustomersPane.selectedCustomer.setCcCvc(0);
         CustomersPane.selectedCustomer.setCcZip(0);
-                for (Customer cust : LoginPageController.allCustomers){
-                    if(CustomersPane.selectedCustomer.getID() == cust.getID())
-                    {
-                        //delete from list of customers object
-                        cust.setCcNumber(0);
-                        cust.setCcExp(0);
-                        cust.setCcCvc(0);
-                        cust.setCcZip(0);
-                    }
-                }
+        for (Customer cust : LoginPageController.allCustomers){
+            if(CustomersPane.selectedCustomer.getID() == cust.getID())
+            {
+                //delete from list of customers object
+                cust.setCcNumber(0);
+                cust.setCcExp(0);
+                cust.setCcCvc(0);
+                cust.setCcZip(0);
+            }
+        }
         //Delete from DB
         Database.deletePayment(CustomersPane.selectedCustomer.getID());
         //Go back to previous page

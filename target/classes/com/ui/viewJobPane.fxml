@@ -84,7 +84,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextArea fx:id="jobDescTxtArea" maxHeight="1.7976931348623157E308" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <TextArea fx:id="jobDescTxtArea" maxHeight="1.7976931348623157E308" onKeyReleased="#updateJobDesc" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets right="25.0" />
                            </GridPane.margin>
@@ -127,7 +127,7 @@
                               </Label>
                               <HBox prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                                  <children>
-                                    <RadioButton fx:id="unpaidInvoiceRadio" mnemonicParsing="false" selected="true" text="Unpaid">
+                                    <RadioButton fx:id="unpaidInvoiceRadio" mnemonicParsing="false" onAction="#toggleUnpaidRadio" selected="true" text="Unpaid">
                                        <padding>
                                           <Insets top="4.0" />
                                        </padding>
@@ -135,12 +135,11 @@
                                           <ToggleGroup fx:id="invoiceStatus" />
                                        </toggleGroup>
                                     </RadioButton>
-                                    <RadioButton fx:id="paidInvoiceRadio" mnemonicParsing="false" text="Paid" toggleGroup="$invoiceStatus">
+                                    <RadioButton fx:id="paidInvoiceRadio" mnemonicParsing="false" onAction="#togglePaidRadio" text="Paid" toggleGroup="$invoiceStatus">
                                        <padding>
                                           <Insets top="4.0" />
                                        </padding>
                                     </RadioButton>
-                                    <Button fx:id="saveInvoiceStatusBtn" mnemonicParsing="false" onAction="#saveInvoiceStatusAction" text="Save" />
                                  </children>
                               </HBox>
                            </children>
@@ -168,13 +167,13 @@
                                     <Insets bottom="2.0" />
                                  </padding>
                               </Label>
-                              <DatePicker fx:id="jobStartDate" />
+                              <DatePicker fx:id="jobStartDate" onAction="#onChangeStartDate" />
                               <Label text="End Date:">
                                  <padding>
                                     <Insets bottom="2.0" />
                                  </padding>
                               </Label>
-                              <DatePicker fx:id="jobEndDate" />
+                              <DatePicker fx:id="jobEndDate" onAction="#onChangeEndDate" />
                            </children>
                         </VBox>
                         <Label maxWidth="1.7976931348623157E308" text="Totals" GridPane.columnIndex="1" GridPane.rowIndex="6">

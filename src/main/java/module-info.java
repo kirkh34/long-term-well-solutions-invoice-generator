@@ -19,4 +19,6 @@ module com.ltwsinvoicesystem.ltwsinvoicesystem {
 
     exports com.ui;
     exports com.ltws;
+    exports ltws;
+    opens ltws to javafx.fxml;
 }

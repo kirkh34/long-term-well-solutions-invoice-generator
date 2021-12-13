@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 
 import java.io.IOException;
@@ -36,14 +37,19 @@ public class SelectCustomer implements Initializable {
     }
 
     public void createJobAction(ActionEvent event) throws IOException{
-        int id = getCustIdbyName(custListView.getSelectionModel().getSelectedItem().toString());
-        for (Customer cust : LoginPageController.allCustomers) {
-            if(cust.getID() == id){
-                JobsPane.jobSelected = new Job(id, new ArrayList<Integer>(), LocalDate.now(),LocalDate.now().plusMonths(1), "", false, FXCollections.observableArrayList(), FXCollections.observableArrayList(), FXCollections.observableArrayList());
-                String stageTitle = "Creating Job for " + cust.getFirstName() + " " + cust.getLastName();
-                ViewJobPane.addingJob = true;
-                Main.goToPage(event, "viewJobPane.fxml", stageTitle);
+        if(custListView.getSelectionModel().getSelectedItem() != null) {
+            int id = getCustIdbyName(custListView.getSelectionModel().getSelectedItem().toString());
+            for (Customer cust : LoginPageController.allCustomers) {
+                if (cust.getID() == id) {
+                    JobsPane.jobSelected = new Job(id, new ArrayList<Integer>(), LocalDate.now(), LocalDate.now().plusMonths(1), "", false, FXCollections.observableArrayList(), FXCollections.observableArrayList(), FXCollections.observableArrayList());
+                    String stageTitle = "Creating Job for " + cust.getFirstName() + " " + cust.getLastName();
+                    ViewJobPane.addingJob = true;
+                    Main.goToPage(event, "viewJobPane.fxml", stageTitle);
+                }
             }
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You must select a customer first!");
+            alert.showAndWait();
         }
     }
 

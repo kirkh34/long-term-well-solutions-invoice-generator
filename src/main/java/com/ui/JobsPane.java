@@ -75,7 +75,7 @@ public class JobsPane implements Initializable {
             }
             jobSelected = new Job(j.getID(), j.getCustID(), jEmpList, j.getJobStart(), j.getJobEnd(), j.getJobDesc(), j.getInvoicePaid(), materialList, laborList, feeList);
             ViewJobPane.addingJob = false;
-            String stageTitle = "Viewing Job #" + jobSelected.getID();
+            String stageTitle = "Viewing Job for " + jobSelected.getCustName();
             Main.goToPage(event, "viewJobPane.fxml", stageTitle);
         } else{
                 Alert alert = new Alert(Alert.AlertType.WARNING, "You must select a job first!");

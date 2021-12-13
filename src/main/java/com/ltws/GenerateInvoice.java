@@ -29,15 +29,12 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 public class GenerateInvoice {
-    private String fileName = "LTWS-Invoice";
-    private String home = System.getProperty("user.home");
-    private String DEST = home+"/Downloads/" + fileName + ".pdf";
+    private String DEST;
     private Job job;
     private Person company;
     private Customer customer;
@@ -49,6 +46,12 @@ public class GenerateInvoice {
         this.customer = customer;
         this.company = company;
         this.total = total;
+        String home = System.getProperty("user.home");
+        setDest(home + "/Downloads/" + "LTWS-Invoice-" + String.format("%05d", job.getID()) + "-" + job.getCustName() + ".pdf");
+    }
+
+    public void setDest(String DEST) {
+        this.DEST = DEST;
     }
 
     public void download() throws Exception {
@@ -435,7 +438,7 @@ public class GenerateInvoice {
             DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
             MimeBodyPart pdfBodyPart = new MimeBodyPart();
             pdfBodyPart.setDataHandler(new DataHandler(dataSource));
-            pdfBodyPart.setFileName(fileName + "-" + String.format("%05d", job.getID()) + "-" + job.getCustName() + ".pdf");
+            pdfBodyPart.setFileName("LTWS-Invoice-" + String.format("%05d", job.getID()) + "-" + job.getCustName() + ".pdf");
 
             //construct the mime multi part
             MimeMultipart mimeMultipart = new MimeMultipart();

@@ -192,6 +192,7 @@ public class ViewCustomersPane implements Initializable {
 
     public void saveCustomer(ActionEvent event) throws IOException {
         if(customer != null && !CustomersPane.addingNewCustomer) {
+            if(validateFields()) {
             customer.setFirstName(firstNameTxt.getText());
             customer.setLastName(lastNameTxt.getText());
             customer.setStreet(streetTxt.getText());
@@ -205,8 +206,9 @@ public class ViewCustomersPane implements Initializable {
             customer.setWellFlowRate(wellFlowRateTxt.getText());
             customer.setWellLocation(wellLocationTxtArea.getText());
 
-            if(validateFields()) {
                 Database.updateCustomer(customer);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " was updated successfully");
+                alert.showAndWait();
                 customer = null;
                 if(comingFromJob) {
                     Main.goToPage(event, "viewJobPane.fxml", "Viewing Job for " + JobsPane.jobSelected.getCustName());
@@ -216,9 +218,8 @@ public class ViewCustomersPane implements Initializable {
                 }
             }
         } else if(CustomersPane.addingNewCustomer) {
-            System.out.println("Selected Radio");
-            System.out.println(selectedRadio);
-            Customer newCustomer = new Customer(
+            if(validateFields()) {
+                Customer newCustomer = new Customer(
                     0,
                     firstNameTxt.getText(),
                     lastNameTxt.getText(),
@@ -229,7 +230,7 @@ public class ViewCustomersPane implements Initializable {
                     Long.parseLong(phoneTxt.getText()),
                     emailTxt.getText(),
                     selectedRadio,
-                    Integer.parseInt(wellDepthTxt.getText()),
+                    Integer.parseInt(wellDepthTxt.getText().equals("") ? "0" : wellDepthTxt.getText()),
                     wellFlowRateTxt.getText(),
                     wellLocationTxtArea.getText(),
                     0L,
@@ -237,10 +238,11 @@ public class ViewCustomersPane implements Initializable {
                     0,
                     0
             );
-            if(validateFields()) {
                 Database.insertCustomer(newCustomer);
                 newCustomer.setID(lastInsertID_Customer);
                 LoginPageController.allCustomers.add(newCustomer);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Customer " + newCustomer.getFirstName() + " " + newCustomer.getLastName() + " was created successfully");
+                alert.showAndWait();
                 Main.goToPage(event,"dashboard.fxml", "LTWS Invoice System Dashbaord");
             }
         }
@@ -286,12 +288,22 @@ public class ViewCustomersPane implements Initializable {
     }
 
     public boolean validateFields(){
-
         String message = "";
-        if (zipTxt.getText().length() != 5) message += "Zip Code must be be 5 digits \n";
-        if (phoneTxt.getText().length() != 10) message += "Phone number must be 10 digits \n";
-        if (!Main.validateEmail(emailTxt.getText())) message += "Email address is invalid";
-        System.out.println();
+        boolean zipNan = false;
+        try {
+            Integer.parseInt(zipTxt.getText());
+        } catch (NumberFormatException e) {
+            zipNan = true;
+        }
+
+        if (firstNameTxt.getText().trim().equals("")) message += "Please enter a first name \n";
+        if (lastNameTxt.getText().trim().equals("")) message += "Please enter a last name \n";
+        if (streetTxt.getText().trim().equals("")) message += "Please enter a street \n";
+        if (cityTxt.getText().trim().equals("")) message += "Please enter a city \n";
+        if (stateComboBox.getValue() == null) message += "Please select a state \n";
+        if (zipTxt.getText().trim().equals("") || zipTxt.getText().length() != 5 || zipNan) message += "Please enter a 5 digit zip code \n";
+        if (phoneTxt.getText().trim().equals("") || phoneTxt.getText().length() != 10) message += "Please enter a 10 digit phone number \n";
+        if (emailTxt.getText().trim().equals("") || !Main.validateEmail(emailTxt.getText())) message += "Please enter a valid email address";
 
         if (message == "")
             return true;
@@ -301,4 +313,5 @@ public class ViewCustomersPane implements Initializable {
             return false;
         }
     }
+
 }

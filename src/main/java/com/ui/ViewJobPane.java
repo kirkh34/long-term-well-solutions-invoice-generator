@@ -137,13 +137,7 @@ public class ViewJobPane implements Initializable {
     public Customer jobCustomer;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //materialList.add(new Job.Material("Some Wood",33.00));
-        //materialList.add(new Job.Material("Red Bricks",100.43));
 
-        //laborList.add(new Job.Labor("Installation",500.40));
-        //laborList.add(new Job.Labor("Removal",55.25));
-
-        //feesList.add(new Job.Fee("Assessment Fee",25.00));
         initJob();
         setCustomerInfo();
         initEmpJobListComboBox();

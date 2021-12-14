@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <Pane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ui.JobsPane">
    <children>
       <VBox>
@@ -17,10 +16,8 @@
               <columns>
                 <TableColumn fx:id="jobIdCol" prefWidth="75.0" text="Job ID" />
                 <TableColumn fx:id="jobCustCol" prefWidth="100.0" text="Customer" />
-                  <TableColumn fx:id="jobDescCol" prefWidth="125.0" text="Description" />
-                  <TableColumn fx:id="jobStartDateCol" prefWidth="75.0" text="Start Date" />
-                  <TableColumn fx:id="jobEndDateCol" prefWidth="75.0" text="End Date" />
-                  <TableColumn fx:id="jobInvoicedCol" prefWidth="75.0" text="Invoice" />
+                  <TableColumn fx:id="jobDescCol" prefWidth="260.0" text="Description" />
+                  <TableColumn fx:id="jobStartDateCol" prefWidth="90.0" text="Start Date" />
                   <TableColumn fx:id="jobInvoicePaidCol" prefWidth="73.0" text="Paid" />
               </columns>
             </TableView>

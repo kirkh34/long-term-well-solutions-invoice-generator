@@ -6,14 +6,12 @@ import com.ltws.Job;
 import com.ui.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.paint.Material;
+import javafx.scene.control.Alert;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.ListIterator;
+
 
 public class Database {
 
@@ -81,11 +79,11 @@ public class Database {
             System.err.println(e.getMessage());
             return null;
         }finally {
-                //Clean up
-                try { rs.close(); } catch (Exception e) { /* Ignored */ }
-                try { ps.close(); } catch (Exception e) { /* Ignored */ }
-                try { conn.close(); } catch (Exception e) { /* Ignored */ }
-            }
+            //Clean up
+            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { ps.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.close(); } catch (Exception e) { /* Ignored */ }
+        }
     }
 
     //Update single employee record in the DB by id
@@ -492,7 +490,6 @@ public class Database {
             while (rs.next()) {
                 if(rs.isFirst()) prevId = rs.getInt("JOB_ID");
                 if(rs.getInt("JOB_ID") != prevId){
-                    System.out.println("running");
 
                     ArrayList<Integer> currentEmpList = new ArrayList<>();
                     ObservableList<Job.Material> currentMaterialList = FXCollections.observableArrayList();

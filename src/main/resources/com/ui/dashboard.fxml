@@ -35,12 +35,7 @@
                <font>
                   <Font size="18.0" />
                </font></Button>
-            <Button fx:id="settingsPane" mnemonicParsing="false" onAction="#changeContent" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #333;" text="Settings" textFill="WHITE">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Button>
-            <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #333;" text="Logout" textFill="WHITE" translateY="300.0">
+            <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #333;" text="Logout" textFill="WHITE" translateY="350.0">
                <VBox.margin>
                   <Insets />
                </VBox.margin>

@@ -5,10 +5,7 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
@@ -29,8 +26,8 @@ public class CustomersPane implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        tableView.setPlaceholder(new Label("No Customers Added"));
         tableView.refresh();
-
         firstNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("firstName"));
         lastNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("lastName"));
         emailCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("email"));

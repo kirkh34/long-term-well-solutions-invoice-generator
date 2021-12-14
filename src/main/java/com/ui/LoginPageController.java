@@ -34,22 +34,22 @@ public class LoginPageController implements Initializable {
 
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
-        employeeLoggedIn = Database.validateEmployee(usernameTxt.getText(),passwordTxt.getText());
-        if (employeeLoggedIn != null)
-        {
-            Parent parent = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
-            Scene scene = new Scene(parent, 800, 600);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.hide(); //optional
-            stage.setTitle("LTWS Invoice System Dashboard");
-            stage.setScene(scene);
-            stage.show();
-        }
-        else
-        {
-            usernameTxt.clear();
-            passwordTxt.clear();
-            invalidLbl.setText("Sorry, invalid credentials");
+        try {
+            employeeLoggedIn = Database.validateEmployee(usernameTxt.getText(), passwordTxt.getText());
+            if (employeeLoggedIn != null) {
+                Parent parent = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
+                Scene scene = new Scene(parent, 800, 600);
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.hide(); //optional
+                stage.setTitle("LTWS Invoice System Dashboard");
+                stage.setScene(scene);
+                stage.show();
+            } else {
+                throw new LoginException("Invalid Credentials");
+            }
+        } catch(Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            alert.showAndWait();
         }
     }
 
@@ -57,7 +57,6 @@ public class LoginPageController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         usernameTxt.setText("admin");
         passwordTxt.setText("password");
-        //invalidLbl.setText("Test Credentials - Username: admin | password: password");
         allEmployees = Database.queryEmployees();
         allCustomers = Database.queryCustomers();
         allJobs = Database.queryJobs();
@@ -72,5 +71,11 @@ public class LoginPageController implements Initializable {
             }
         }
         return customer;
+    }
+}
+
+class LoginException extends Exception{
+    LoginException(String message){
+        super(message);
     }
 }

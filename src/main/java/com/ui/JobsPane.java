@@ -1,5 +1,6 @@
 package com.ui;
 import com.ltws.Job;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -21,8 +23,6 @@ public class JobsPane implements Initializable {
     @FXML TableColumn<Job, String> jobCustCol;
     @FXML TableColumn<Job, String> jobDescCol;
     @FXML TableColumn<Job, String> jobStartDateCol;
-    @FXML TableColumn<Job, String> jobEndDateCol;
-    @FXML TableColumn<Job, String> jobInvoicedCol;
     @FXML TableColumn<Job, String> jobInvoicePaidCol;
 
     @FXML Button viewJobBtn;
@@ -38,18 +38,24 @@ public class JobsPane implements Initializable {
     public void initTable(){
         viewJobsTable.setPlaceholder(new Label("No Jobs Added"));
         viewJobsTable.refresh();
-        jobIdCol.setCellValueFactory(new PropertyValueFactory("ID"));
+        jobIdCol.setCellValueFactory(cellData -> {
+            int id = cellData.getValue().getID();
+            String formattedID = String.format("%05d", id);
+            return new ReadOnlyObjectWrapper(formattedID);
+        });
         jobCustCol.setCellValueFactory(new PropertyValueFactory("custName"));
         jobDescCol.setCellValueFactory(new PropertyValueFactory("jobDesc"));
-        jobStartDateCol.setCellValueFactory(new PropertyValueFactory("jobStart"));
-        jobEndDateCol.setCellValueFactory(new PropertyValueFactory("jobEnd"));
+        jobStartDateCol.setCellValueFactory(cellData ->
+        {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/YYYY");
+            return new ReadOnlyStringWrapper(formatter.format(LocalDate.now()));
+        });
         jobInvoicePaidCol.setCellValueFactory(cellData ->
         {
             boolean isPaid = cellData.getValue().getInvoicePaid();
             String paid = isPaid ? "Yes" : "No";
             return new ReadOnlyStringWrapper(paid);
         });
-        System.out.println("job list size" + LoginPageController.allJobs.size());
         viewJobsTable.setItems(LoginPageController.allJobs);
         viewJobsTable.getSortOrder().setAll(jobIdCol);
     }

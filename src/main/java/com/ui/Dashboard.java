@@ -21,7 +21,6 @@ public class Dashboard implements Initializable {
     @FXML Button jobsPane;
     @FXML Button customersPane;
     @FXML Button employeesPane;
-    @FXML Button settingsPane;
 
     @FXML Label welcomeLbl;
 
@@ -37,7 +36,7 @@ public class Dashboard implements Initializable {
 
     @FXML
     private void logout(ActionEvent event) throws IOException {
-        Parent loginPage = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
+        Parent loginPage = FXMLLoader.load(getClass().getResource("loginPage.fxml"));
         Scene loginScene = new Scene(loginPage);
         Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         app_stage.hide(); //optional
@@ -53,7 +52,9 @@ public class Dashboard implements Initializable {
         if(LoginPageController.showPane.equals("EmployeesPane")) employeesPane.fire();
         if(LoginPageController.showPane.equals("CustomersPane")) customersPane.fire();
         if(LoginPageController.showPane.equals("JobsPane")) jobsPane.fire();
-        if(LoginPageController.showPane.equals("SettingsPane")) settingsPane.fire();
+        if(!LoginPageController.employeeLoggedIn.getIsAdmin()){
+            employeesPane.setVisible(false);
+        }
     }
 
     public void changeBtnColor(String btnID){
@@ -61,22 +62,14 @@ public class Dashboard implements Initializable {
             jobsPane.setStyle("-fx-background-color: #555;");
             employeesPane.setStyle("-fx-background-color: #333;");
             customersPane.setStyle("-fx-background-color: #333;");
-            settingsPane.setStyle("-fx-background-color: #333;");
         } else if(btnID.equals("customersPane")) {
             customersPane.setStyle("-fx-background-color: #555;");
             jobsPane.setStyle("-fx-background-color: #333;");
             employeesPane.setStyle("-fx-background-color: #333;");
-            settingsPane.setStyle("-fx-background-color: #333;");
         } else if(btnID.equals("employeesPane")) {
             employeesPane.setStyle("-fx-background-color: #555;");
             jobsPane.setStyle("-fx-background-color: #333;");
             customersPane.setStyle("-fx-background-color: #333;");
-            settingsPane.setStyle("-fx-background-color: #333;");
-        } else if(btnID.equals("settingsPane")) {
-            settingsPane.setStyle("-fx-background-color: #555;");
-            jobsPane.setStyle("-fx-background-color: #333;");
-            customersPane.setStyle("-fx-background-color: #333;");
-            employeesPane.setStyle("-fx-background-color: #333;");
         }
     }
 }

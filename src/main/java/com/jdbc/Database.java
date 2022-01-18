@@ -15,11 +15,11 @@ import java.util.Collections;
 
 public class Database {
 
-    private final static String PUBLIC_DNS = "gator3139.hostgator.com";
+    private final static String PUBLIC_DNS = "xxxx";
     private final static String PORT = "3306";
-    private final static String DATABASE = "avidnexu_long_term_well_solutions";
-    private final static String DB_USERNAME = "avidnexu_ltws";
-    private final static String DB_PASSWORD = "sdev265ivytech";
+    private final static String DATABASE = "xxxx";
+    private final static String DB_USERNAME = "xxxx";
+    private final static String DB_PASSWORD = "xxxx";
     private static Connection conn = null;
     private static Statement st = null;
     private static PreparedStatement ps = null;

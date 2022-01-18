@@ -29,8 +29,8 @@ public class Email {
 
     public void email() {
 
-        String sender = "kirkhoey@gmail.com"; //replace this with a valid sender email address
-        String recipient = "avidnexusllc@gmail.com"; //replace this with a valid recipient email address
+        String sender = "xxxx"; //replace this with a valid sender email address
+        String recipient = "xxxx"; //replace this with a valid recipient email address
         String content = "dummy content"; //this will be the text of the email
         String subject = "dummy subject"; //this will be the subject of the email
 
@@ -45,7 +45,7 @@ public class Email {
         Session session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication("ltwsinvoices@gmail.com","L0ngTermWe!!S0lutions");
+                        return new PasswordAuthentication("xxxx","xxxx");
                     }
                 });
 
